@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魔塔 Magic Tower</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="game-area" aria-label="游戏地图">
+      <header class="top-bar">
+        <div>
+          <h1>魔塔</h1>
+          <p id="floorName">第 1 层</p>
+        </div>
+        <button id="helpBtn" class="icon-button" type="button" aria-label="帮助">?</button>
+      </header>
+
+      <div id="mapGrid" class="map-grid" role="grid" aria-label="4x4 魔塔地图"></div>
+
+      <div class="mobile-controls" aria-label="移动控制">
+        <button class="move-button" type="button" data-move="up" aria-label="向上">↑</button>
+        <button class="move-button" type="button" data-move="left" aria-label="向左">←</button>
+        <button class="move-button" type="button" data-move="down" aria-label="向下">↓</button>
+        <button class="move-button" type="button" data-move="right" aria-label="向右">→</button>
+      </div>
+    </section>
+
+    <aside class="side-panel" aria-label="角色状态">
+      <section class="panel-section hero-card">
+        <img class="hero-portrait" src="assets/hero.png" alt="" aria-hidden="true">
+        <div>
+          <h2>勇者</h2>
+          <p id="heroLevel">LV 1</p>
+        </div>
+      </section>
+
+      <section class="panel-section stats-grid" aria-label="基础属性">
+        <div><span>HP</span><strong id="statHp">0</strong></div>
+        <div><span>ATK</span><strong id="statAtk">0</strong></div>
+        <div><span>DEF</span><strong id="statDef">0</strong></div>
+        <div><span>金币</span><strong id="statGold">0</strong></div>
+        <div><span>经验</span><strong id="statExp">0</strong></div>
+        <div><span>楼层</span><strong id="statFloor">1</strong></div>
+      </section>
+
+      <section class="panel-section key-grid" aria-label="钥匙">
+        <div><span class="key-swatch yellow"></span>黄钥匙 <strong id="keyYellow">0</strong></div>
+        <div><span class="key-swatch blue"></span>蓝钥匙 <strong id="keyBlue">0</strong></div>
+        <div><span class="key-swatch red"></span>红钥匙 <strong id="keyRed">0</strong></div>
+      </section>
+
+      <section class="panel-section enemy-preview" aria-label="目标信息">
+        <h2>前方目标</h2>
+        <div id="targetInfo" class="target-info">移动到怪物、道具、门或楼梯旁查看。</div>
+      </section>
+
+      <section class="panel-section save-panel" aria-label="存档">
+        <h2>存档槽</h2>
+        <div id="saveSlots" class="save-slots"></div>
+      </section>
+    </aside>
+
+    <section class="bottom-panel" aria-label="战斗日志和操作">
+      <div class="log-header">
+        <h2>日志</h2>
+        <div class="action-row">
+          <button id="newGameBtn" class="text-button" type="button">新游戏</button>
+          <button id="manualSaveBtn" class="text-button" type="button">保存</button>
+          <button id="quickLoadBtn" class="text-button" type="button">读取</button>
+          <button id="shopBtn" class="text-button" type="button">商店</button>
+        </div>
+      </div>
+      <div id="battleLog" class="battle-log" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <dialog id="shopDialog" class="modal">
+    <form method="dialog">
+      <header class="modal-header">
+        <h2>商店</h2>
+        <button class="icon-button" type="submit" aria-label="关闭">×</button>
+      </header>
+      <div id="shopItems" class="shop-items"></div>
+      <p id="shopHint" class="muted"></p>
+    </form>
+  </dialog>
+
+  <dialog id="helpDialog" class="modal">
+    <form method="dialog">
+      <header class="modal-header">
+        <h2>操作</h2>
+        <button class="icon-button" type="submit" aria-label="关闭">×</button>
+      </header>
+      <div class="help-list">
+        <p>方向键或 WASD 移动；手机端使用地图下方方向按钮。</p>
+        <p>点击相邻格也可以移动，点击其他格会查看目标信息。</p>
+        <p>击败每层守卫后，踩下楼梯进入下一层。</p>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>
