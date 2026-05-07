@@ -179,15 +179,72 @@ h2 {
   image-rendering: pixelated;
 }
 
+.actor-sprite {
+  position: absolute;
+  width: 82%;
+  aspect-ratio: 1;
+  background-repeat: no-repeat;
+  background-size: 400% 300%;
+  background-position: 0 var(--sprite-y);
+  filter: drop-shadow(0 9px 8px rgba(0, 0, 0, 0.42));
+  image-rendering: pixelated;
+  pointer-events: none;
+  transform-origin: 50% 76%;
+  animation: spriteCycle 960ms steps(1, end) infinite;
+}
+
+.actor-hero {
+  width: 88%;
+}
+
+.actor-enemy {
+  width: 82%;
+}
+
+.actor-sprite.action-walk {
+  animation-duration: 520ms;
+}
+
+.actor-sprite.action-attack {
+  animation-duration: 420ms;
+}
+
+.actor-sprite.facing-left {
+  transform: scaleX(-1);
+}
+
+.actor-sprite.facing-up {
+  filter: drop-shadow(0 7px 7px rgba(0, 0, 0, 0.42)) saturate(0.94);
+}
+
 .tile.player .tile-entity {
   width: 82%;
   height: 82%;
+}
+
+.item-entity {
+  animation:
+    itemFloat 1.8s ease-in-out infinite,
+    itemGlow 2.4s ease-in-out infinite;
+}
+
+.tile.item-ruby .item-entity,
+.tile.item-emerald .item-entity {
+  animation:
+    itemFloat 1.8s ease-in-out infinite,
+    itemGlow 2.4s ease-in-out infinite,
+    itemSpin 3.6s linear infinite;
 }
 
 .tile.boss .tile-entity {
   width: 86%;
   height: 86%;
   animation: bossPulse 1.5s ease-in-out infinite;
+}
+
+.tile.boss .actor-sprite {
+  width: 94%;
+  animation-duration: 820ms;
 }
 
 .tile.reachable {
@@ -201,6 +258,29 @@ h2 {
 @keyframes bossPulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.06); }
+}
+
+@keyframes spriteCycle {
+  0%, 24.99% { background-position: 0 var(--sprite-y); }
+  25%, 49.99% { background-position: 33.333% var(--sprite-y); }
+  50%, 74.99% { background-position: 66.667% var(--sprite-y); }
+  75%, 100% { background-position: 100% var(--sprite-y); }
+}
+
+@keyframes itemFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7%); }
+}
+
+@keyframes itemGlow {
+  0%, 100% { filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.42)); }
+  50% { filter: drop-shadow(0 0 10px rgba(241, 196, 83, 0.68)); }
+}
+
+@keyframes itemSpin {
+  0% { rotate: -3deg; }
+  50% { rotate: 5deg; }
+  100% { rotate: -3deg; }
 }
 
 .mobile-controls {

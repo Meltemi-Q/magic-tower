@@ -16,6 +16,14 @@ import {
 } from "./map.js";
 import { previewBattle, runBattle } from "./battle.js";
 import { SHOP_OPTIONS, buyShopOption, createShopState, getShopCost } from "./shop.js";
+import {
+  ACTIONS,
+  createActorSprite,
+  createAnimationState,
+  getActionDuration,
+  resetHeroAction,
+  setHeroAction
+} from "./animation.js";
 
 const SAVE_PREFIX = "magicTowerSaveSlot";
 const SAVE_SLOT_COUNT = 3;
@@ -59,6 +67,8 @@ const state = {
   floors: [],
   shop: createShopState(),
   logs: [],
+  animation: createAnimationState(),
+  heroActionTimer: 0,
   gameOver: false,
   won: false
 };
@@ -81,6 +91,7 @@ function startNewGame(confirmFirst = true) {
   state.floors = createInitialFloors();
   state.shop = createShopState();
   state.logs = [];
+  state.animation = createAnimationState();
   state.gameOver = false;
   state.won = false;
   addLog("新游戏开始。", "good");
@@ -145,16 +156,22 @@ function bindEvents() {
 }
 
 function movePlayer(direction) {
+  if (!DIRECTIONS[direction]) {
+    return;
+  }
+
   if (state.gameOver || state.won) {
     addLog(state.won ? "魔塔已经通关，可以开始新游戏。" : "勇者已经倒下，请读取存档或重新开始。", "warn");
     return;
   }
 
+  setHeroAction(state.animation, ACTIONS.IDLE, direction);
   const delta = DIRECTIONS[direction];
   const targetX = state.player.x + delta.x;
   const targetY = state.player.y + delta.y;
 
   if (!isInsideMap(targetX, targetY)) {
+    renderMap();
     return;
   }
 
@@ -164,6 +181,7 @@ function movePlayer(direction) {
 
   if (tile === TILE.WALL) {
     addLog("前方是墙。", "warn");
+    renderMap();
     return;
   }
 
@@ -179,6 +197,7 @@ function movePlayer(direction) {
   if (currentTile === TILE.STAIR_DOWN) {
     state.player.x = targetX;
     state.player.y = targetY;
+    queueHeroAction(ACTIONS.WALK, direction);
     useStairs("down");
     return;
   }
@@ -186,6 +205,7 @@ function movePlayer(direction) {
   if (currentTile === TILE.STAIR_UP) {
     state.player.x = targetX;
     state.player.y = targetY;
+    queueHeroAction(ACTIONS.WALK, direction);
     useStairs("up");
     return;
   }
@@ -193,6 +213,7 @@ function movePlayer(direction) {
   if (currentTile === TILE.SHOP) {
     state.player.x = targetX;
     state.player.y = targetY;
+    queueHeroAction(ACTIONS.WALK, direction);
     addLog("进入商店。", "good");
     renderAll();
     openShop();
@@ -201,20 +222,22 @@ function movePlayer(direction) {
 
   state.player.x = targetX;
   state.player.y = targetY;
+  queueHeroAction(entity?.type === "enemy" ? ACTIONS.ATTACK : ACTIONS.WALK, direction);
   renderAll();
 }
 
 function tryOpenDoor(floor, x, y, tile) {
   const keyType = DOOR_TO_KEY[tile];
   if (state.player.keys[keyType] <= 0) {
-    addLog(`需要${KEY_NAMES[keyType]}。`, "warn");
+    addLog(`需要 ${KEY_NAMES[keyType]}。`, "warn");
     renderTargetInfo(x, y);
+    renderMap();
     return false;
   }
 
   state.player.keys[keyType] -= 1;
   setTile(floor, x, y, TILE.FLOOR);
-  addLog(`打开${KEY_NAMES[keyType]}门。`, "good");
+  addLog(`打开${KEY_NAMES[keyType].replace("钥匙", "门")}。`, "good");
   return true;
 }
 
@@ -232,6 +255,7 @@ function handleEntity(floor, x, y, entity) {
     if (!preview.canWin) {
       addLog(`无法击败 ${preview.enemy.name}，预计损失 ${preview.expectedLoss} HP。`, "bad");
       renderTargetInfo(x, y);
+      renderMap();
       return false;
     }
 
@@ -255,6 +279,7 @@ function handleEntity(floor, x, y, entity) {
       state.won = true;
       state.player.x = x;
       state.player.y = y;
+      queueHeroAction(ACTIONS.ATTACK, state.animation.heroFacing);
       addLog("魔塔领主倒下，通关完成。", "good");
       renderAll();
       return false;
@@ -298,6 +323,15 @@ function getCurrentFloor() {
   return state.floors[state.player.floor];
 }
 
+function queueHeroAction(action, direction) {
+  window.clearTimeout(state.heroActionTimer);
+  setHeroAction(state.animation, action, direction);
+  state.heroActionTimer = window.setTimeout(() => {
+    resetHeroAction(state.animation);
+    renderMap();
+  }, getActionDuration(action));
+}
+
 function renderAll() {
   if (!state.player) {
     return;
@@ -332,9 +366,11 @@ function renderMap() {
 
       if (state.player.x === x && state.player.y === y) {
         button.classList.add("player");
-        appendTileImage(button, ASSETS.hero, "tile-entity");
-      } else if (entity) {
-        appendTileImage(button, entityAsset(entity), "tile-entity");
+        appendActorSprite(button, ASSETS.sprites.hero, "hero", state.animation.heroAction, state.animation.heroFacing);
+      } else if (entity?.type === "enemy") {
+        appendActorSprite(button, ENEMY_DEFS[entity.id].sprite, "enemy", ACTIONS.IDLE);
+      } else if (entity?.type === "item") {
+        appendTileImage(button, ITEM_DEFS[entity.id].asset, "tile-entity item-entity");
       }
 
       if (Math.abs(state.player.x - x) + Math.abs(state.player.y - y) === 1) {
@@ -356,13 +392,17 @@ function appendTileImage(parent, src, className) {
   parent.appendChild(img);
 }
 
+function appendActorSprite(parent, src, role, action, facing = "down") {
+  parent.appendChild(createActorSprite(src, { action, facing, role }));
+}
+
 function tileClass(tile, entity) {
   if (entity?.type === "enemy") {
     return ENEMY_DEFS[entity.id].isBoss ? "enemy boss" : "enemy";
   }
 
   if (entity?.type === "item") {
-    return "item";
+    return `item item-${entity.id}`;
   }
 
   const classMap = {
@@ -377,18 +417,6 @@ function tileClass(tile, entity) {
   };
 
   return classMap[tile] ?? "floor";
-}
-
-function entityAsset(entity) {
-  if (entity.type === "item") {
-    return ITEM_DEFS[entity.id].asset;
-  }
-
-  if (entity.type === "enemy") {
-    return ENEMY_DEFS[entity.id].asset;
-  }
-
-  return ASSETS.tiles[TILE.FLOOR];
 }
 
 function describeCell(tile, entity, x, y) {
@@ -463,7 +491,7 @@ function renderTargetInfo(x = null, y = null) {
 
   if (DOOR_TO_KEY[tile]) {
     const keyType = DOOR_TO_KEY[tile];
-    els.targetInfo.innerHTML = `<div class="target-row"><span>${KEY_NAMES[keyType]}门</span><strong>持有 ${state.player.keys[keyType]}</strong></div>`;
+    els.targetInfo.innerHTML = `<div class="target-row"><span>${KEY_NAMES[keyType].replace("钥匙", "门")}</span><strong>持有 ${state.player.keys[keyType]}</strong></div>`;
     return;
   }
 
@@ -597,7 +625,7 @@ function renderSaveSlots() {
 function getSlotLabel(slot) {
   const raw = localStorage.getItem(slotKey(slot));
   if (!raw) {
-    return `槽 ${slot}：空`;
+    return `槽 ${slot}: 空`;
   }
 
   try {
@@ -608,15 +636,15 @@ function getSlotLabel(slot) {
       hour: "2-digit",
       minute: "2-digit"
     });
-    return `槽 ${slot}：${data.floorName ?? "未知楼层"} ${savedAt}`;
+    return `槽 ${slot}: ${data.floorName ?? "未知楼层"} ${savedAt}`;
   } catch {
-    return `槽 ${slot}：数据损坏`;
+    return `槽 ${slot}: 数据损坏`;
   }
 }
 
 function saveGame(slot) {
   const payload = {
-    version: 2,
+    version: 3,
     savedAt: new Date().toISOString(),
     floorName: getCurrentFloor().name,
     player: state.player,
@@ -649,6 +677,7 @@ function loadGame(slot) {
     state.floors = data.floors;
     state.shop = { ...createShopState(), ...data.shop };
     state.logs = data.logs ?? [];
+    state.animation = createAnimationState();
     state.gameOver = Boolean(data.gameOver);
     state.won = Boolean(data.won);
     addLog(`已读取槽 ${slot}。`, "good");
@@ -660,7 +689,7 @@ function loadGame(slot) {
 
 function isValidSave(data) {
   return data
-    && data.version === 2
+    && [2, 3].includes(data.version)
     && data.player
     && Array.isArray(data.floors)
     && data.floors.length === 5

@@ -1,4 +1,4 @@
-// 地图模块保存所有静态规则、素材路径和五层初始关卡。
+// 地图模块保存静态规则、素材路径和五层初始关卡。
 export const MAP_SIZE = 4;
 
 export const TILE = Object.freeze({
@@ -14,6 +14,21 @@ export const TILE = Object.freeze({
 
 export const ASSETS = Object.freeze({
   hero: "assets/hero.png",
+  sprites: {
+    hero: "assets/sprites/hero.svg",
+    enemies: {
+      greenSlime: "assets/sprites/green_slime.svg",
+      redSlime: "assets/sprites/red_slime.svg",
+      bat: "assets/sprites/bat.svg",
+      skeleton: "assets/sprites/skeleton.svg",
+      mage: "assets/sprites/mage.svg",
+      boss1: "assets/sprites/boss.svg",
+      boss2: "assets/sprites/boss.svg",
+      boss3: "assets/sprites/boss.svg",
+      boss4: "assets/sprites/boss.svg",
+      finalBoss: "assets/sprites/boss.svg"
+    }
+  },
   tiles: {
     [TILE.WALL]: "assets/wall.png",
     [TILE.FLOOR]: "assets/floor.png",
@@ -129,6 +144,7 @@ export const ENEMY_DEFS = Object.freeze({
   greenSlime: {
     name: "绿色史莱姆",
     asset: ASSETS.enemies.greenSlime,
+    sprite: ASSETS.sprites.enemies.greenSlime,
     hp: 45,
     atk: 18,
     def: 4,
@@ -138,6 +154,7 @@ export const ENEMY_DEFS = Object.freeze({
   redSlime: {
     name: "红色史莱姆",
     asset: ASSETS.enemies.redSlime,
+    sprite: ASSETS.sprites.enemies.redSlime,
     hp: 70,
     atk: 26,
     def: 8,
@@ -145,8 +162,9 @@ export const ENEMY_DEFS = Object.freeze({
     exp: 7
   },
   bat: {
-    name: "蝙蝠",
+    name: "暗翼蝙蝠",
     asset: ASSETS.enemies.bat,
+    sprite: ASSETS.sprites.enemies.bat,
     hp: 90,
     atk: 34,
     def: 10,
@@ -156,6 +174,7 @@ export const ENEMY_DEFS = Object.freeze({
   skeleton: {
     name: "骷髅士兵",
     asset: ASSETS.enemies.skeleton,
+    sprite: ASSETS.sprites.enemies.skeleton,
     hp: 130,
     atk: 46,
     def: 16,
@@ -165,6 +184,7 @@ export const ENEMY_DEFS = Object.freeze({
   mage: {
     name: "黑袍法师",
     asset: ASSETS.enemies.mage,
+    sprite: ASSETS.sprites.enemies.mage,
     hp: 170,
     atk: 58,
     def: 22,
@@ -174,6 +194,7 @@ export const ENEMY_DEFS = Object.freeze({
   boss1: {
     name: "一层守卫",
     asset: ASSETS.enemies.boss1,
+    sprite: ASSETS.sprites.enemies.boss1,
     hp: 120,
     atk: 34,
     def: 12,
@@ -184,6 +205,7 @@ export const ENEMY_DEFS = Object.freeze({
   boss2: {
     name: "二层守卫",
     asset: ASSETS.enemies.boss2,
+    sprite: ASSETS.sprites.enemies.boss2,
     hp: 210,
     atk: 48,
     def: 18,
@@ -194,6 +216,7 @@ export const ENEMY_DEFS = Object.freeze({
   boss3: {
     name: "三层守卫",
     asset: ASSETS.enemies.boss3,
+    sprite: ASSETS.sprites.enemies.boss3,
     hp: 270,
     atk: 62,
     def: 26,
@@ -204,6 +227,7 @@ export const ENEMY_DEFS = Object.freeze({
   boss4: {
     name: "四层守卫",
     asset: ASSETS.enemies.boss4,
+    sprite: ASSETS.sprites.enemies.boss4,
     hp: 350,
     atk: 78,
     def: 35,
@@ -214,6 +238,7 @@ export const ENEMY_DEFS = Object.freeze({
   finalBoss: {
     name: "魔塔领主",
     asset: ASSETS.enemies.finalBoss,
+    sprite: ASSETS.sprites.enemies.finalBoss,
     hp: 460,
     atk: 95,
     def: 44,
@@ -224,7 +249,7 @@ export const ENEMY_DEFS = Object.freeze({
   }
 });
 
-// 每层只有 4x4，实体用 "x,y" 保存，方便捡取和击杀后删除。
+// 每层只有 4x4，实体用 "x,y" 保存，方便拾取和战斗后删除。
 const floorTemplates = [
   {
     id: 0,
@@ -294,7 +319,7 @@ const floorTemplates = [
   },
   {
     id: 3,
-    name: "第 4 层 暗井",
+    name: "第 4 层 暗炉",
     start: { x: 0, y: 3 },
     upPosition: { x: 0, y: 3 },
     downPosition: { x: 2, y: 0 },

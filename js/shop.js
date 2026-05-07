@@ -1,4 +1,4 @@
-// 商店模块无 UI 依赖，只负责价格、扣款和属性成长。
+// 商店模块没有 UI 依赖，只负责价格、扣款和属性成长。
 export const SHOP_OPTIONS = Object.freeze([
   {
     id: "hp",
