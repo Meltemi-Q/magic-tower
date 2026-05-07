@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate:assets": "node tools/generate_sprites.mjs",
     "start": "node server.mjs"
   }
 }
