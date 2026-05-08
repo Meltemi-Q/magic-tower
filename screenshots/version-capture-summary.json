@@ -1,0 +1,107 @@
+[
+  {
+    "version": "v0.1",
+    "ref": "8fc0a4e00be88ef8ced895422c52c2342fcfffd9",
+    "source": "commit message",
+    "status": "captured",
+    "bytes": 466259,
+    "port": 18080,
+    "path": "screenshots/v0.1/main.png"
+  },
+  {
+    "version": "v3.0",
+    "ref": "v3.0",
+    "source": "git tag",
+    "status": "captured",
+    "bytes": 453892,
+    "port": 18081,
+    "path": "screenshots/v3.0/main.png"
+  },
+  {
+    "version": "v3.1",
+    "ref": null,
+    "source": "missing git ref",
+    "status": "skipped",
+    "reason": "No local or remote Git ref/tag was found for v3.1"
+  },
+  {
+    "version": "v3.2",
+    "ref": null,
+    "source": "missing git ref",
+    "status": "skipped",
+    "reason": "No local or remote Git ref/tag was found for v3.2"
+  },
+  {
+    "version": "v4.0",
+    "ref": "v4.0",
+    "source": "git tag",
+    "status": "captured",
+    "bytes": 454226,
+    "port": 18084,
+    "path": "screenshots/v4.0/main.png"
+  },
+  {
+    "version": "v4.1",
+    "ref": null,
+    "source": "missing git ref",
+    "status": "skipped",
+    "reason": "No local or remote Git ref/tag was found for v4.1"
+  },
+  {
+    "version": "v5.0",
+    "ref": "v5.0",
+    "source": "git tag",
+    "status": "captured",
+    "bytes": 453816,
+    "port": 18086,
+    "path": "screenshots/v5.0/main.png"
+  },
+  {
+    "version": "v5.1",
+    "ref": null,
+    "source": "missing git ref",
+    "status": "skipped",
+    "reason": "No local or remote Git ref/tag was found for v5.1"
+  },
+  {
+    "version": "v6.0",
+    "ref": null,
+    "source": "missing git ref",
+    "status": "skipped",
+    "reason": "No local or remote Git ref/tag was found for v6.0"
+  },
+  {
+    "version": "v6.1",
+    "ref": null,
+    "source": "missing git ref",
+    "status": "skipped",
+    "reason": "No local or remote Git ref/tag was found for v6.1"
+  },
+  {
+    "version": "v6.2",
+    "ref": "94c44bb43e74283ea10d0b9e8bc71686d953824b",
+    "source": "commit message",
+    "status": "captured",
+    "bytes": 418968,
+    "port": 18090,
+    "path": "screenshots/v6.2/main.png"
+  },
+  {
+    "version": "v6.3",
+    "ref": "da3e798c0cd03a2b95734817889d276b343f99ca",
+    "source": "commit message",
+    "status": "captured",
+    "bytes": 447470,
+    "port": 18091,
+    "path": "screenshots/v6.3/main.png"
+  },
+  {
+    "version": "v6.4",
+    "ref": "main",
+    "source": "current main",
+    "status": "captured",
+    "bytes": 401226,
+    "port": 18092,
+    "path": "screenshots/v6.4/main.png"
+  }
+]

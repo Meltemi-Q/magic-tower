@@ -35,6 +35,19 @@
 
 ---
 
+### 2026-05-08 历史版本主界面截图归档
+| 项目 | 内容 |
+|------|------|
+| **目标** | 为可定位到 Git 引用的历史版本生成 `screenshots/v{版本}/main.png` 主界面截图。 |
+| **标签检查** | `git tag --list` 与 `git ls-remote --tags origin` 均只发现 `v2.0`、`v3.0`、`v4.0`、`v5.0`；用户列出的 `v3.1`、`v3.2`、`v4.1`、`v5.1`、`v6.0`、`v6.1` 没有本地或远端 tag/ref。 |
+| **采集方式** | 使用独立 `git worktree` 检出历史版本，`npx --yes serve . -p <port>` 启动静态服务，Playwright Chromium 新上下文清空 `localStorage/sessionStorage`，等待 `networkidle` 后截取 `1280x720` 视口。 |
+| **端口处理** | 8080 已被现有 Python HTTP 服务占用，首次验证发现会截到错误服务；随后改用 18080 起的空闲端口并重新覆盖已生成截图。 |
+| **已生成** | `v0.1`(`8fc0a4e`)、`v3.0`(tag)、`v4.0`(tag)、`v5.0`(tag)、`v6.2`(`94c44bb`)、`v6.3`(`da3e798`)、`v6.4`(`main`)。 |
+| **未生成** | `v3.1`、`v3.2`、`v4.1`、`v5.1`、`v6.0`、`v6.1` 缺少可检出的 Git tag/ref；未用其他提交冒充这些版本。 |
+| **验证** | 已生成的 `main.png` 均为 `1280x720` PNG；采集摘要写入 `screenshots/version-capture-summary.json`。 |
+
+---
+
 ### 2026-05-08 移动端方向按钮穿透修复 v6.4
 | 项目 | 内容 |
 |------|------|
