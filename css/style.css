@@ -997,6 +997,7 @@ h3 {
   place-items: end center;
   padding: 22px;
   background: rgba(0, 0, 0, 0.54);
+  pointer-events: none;
 }
 
 .tutorial-overlay[hidden] {
@@ -1013,6 +1014,7 @@ h3 {
   background: rgba(27, 28, 24, 0.98);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
   z-index: 40;
+  pointer-events: auto;
 }
 
 .tutorial-panel p {
@@ -1045,7 +1047,7 @@ h3 {
 .tutorial-focus {
   position: relative;
   z-index: 30;
-  pointer-events: none;
+  pointer-events: auto;
   outline: 3px solid var(--gold);
   outline-offset: 4px;
   box-shadow: 0 0 0 8px rgba(232, 189, 76, 0.18), 0 0 28px rgba(232, 189, 76, 0.48);

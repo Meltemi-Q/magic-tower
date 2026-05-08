@@ -260,6 +260,7 @@ function bindEvents() {
       event.preventDefault();
       primeAudio();
       movePlayer(direction);
+      return;
     }
 
     if (["1", "2", "3"].includes(event.key)) {

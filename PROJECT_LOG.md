@@ -10,7 +10,7 @@
 
 ---
 
-## 当前版本: v6.2
+## 当前版本: v6.3
 
 ### 已完成功能
 - ✅ 移动端禁止缩放
@@ -32,6 +32,31 @@
 
 ### 待解决问题
 - 无
+
+---
+
+### 2026-05-08 教程遮罩输入修复 v6.3
+| 项目 | 内容 |
+|------|------|
+| **现象** | 新用户首次进入页面时教程遮罩仍可能拦截地图点击、移动按钮等鼠标/触摸输入；键盘移动命中后也会继续向后执行同一次按键处理。 |
+| **修复** | `tutorial-overlay` 改为不接管底层指针事件，教程面板自身保留点击能力；`.tutorial-focus` 恢复指针事件，使被高亮的地图区域可被点击。键盘方向/WASD 命中移动后立即 `return`，避免后续快捷键逻辑干扰。 |
+| **缓存处理** | `index.html` 中 `css/style.css` 与 `js/game.js` 查询参数统一更新到 `v=6.3`。 |
+| **文档** | `AGENTS.md` 当前版本更新为 v6.3；本日志同步记录本次修复。 |
+| **验证** | `node --check js/game.js`、`node --check js/i18n.js` 通过；Playwright 全新 localStorage 验证桌面 `ArrowRight`、手机方向按钮、手机点击相邻格均从 `(0,7)` 移动到 `(1,7)`，并自动写入 `magicTowerTutorialDone.v4=done`。Cloudflare Pages 部署后继续线上复验。 |
+
+---
+
+### Cloudflare Pages 重新部署记录 - v6.3
+| 项目 | 内容 |
+|------|------|
+| 时间 | 2026-05-08 21:49 +08:00 |
+| 执行者 | Codex |
+| 命令 | `npx wrangler pages deploy '.' --project-name=magic-tower --branch=main` |
+| 认证方式 | `CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL` |
+| 结果 | ✅ 部署成功，上传 7 个文件，169 个文件已存在 |
+| 预览地址 | https://75dbbb08.magic-tower.pages.dev |
+| 生产地址 | https://magic-tower.pages.dev |
+| 线上验证 | ✅ `https://magic-tower.pages.dev/?v=6.3` 返回 HTTP 200 且 HTML 包含 `v=6.3`；Playwright 线上验证全新 localStorage 下桌面 `ArrowRight` 与手机方向按钮均从 `(0,7)` 移动到 `(1,7)`，教程自动完成。 |
 
 ---
 
