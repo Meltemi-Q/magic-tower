@@ -1,10 +1,9 @@
 {
   "name": "magic-tower",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "generate:assets": "node tools/generate_sprites.mjs",
     "start": "node server.mjs"
   },
   "dependencies": {
