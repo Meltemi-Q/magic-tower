@@ -1,4 +1,4 @@
-import { ENEMY_DEFS } from "./map.js";
+import { getEnemyDef } from "./map.js";
 
 export function calculateDamage(attackerAtk, defenderDef) {
   // 魔塔经典公式：攻击低于防御时也至少造成 1 点伤害。
@@ -6,7 +6,7 @@ export function calculateDamage(attackerAtk, defenderDef) {
 }
 
 export function previewBattle(player, enemyId) {
-  const enemy = ENEMY_DEFS[enemyId];
+  const enemy = getEnemyDef(enemyId, player.difficulty);
   const playerDamage = calculateDamage(player.atk, enemy.def);
   const enemyDamage = calculateDamage(enemy.atk, player.def);
   const turnsToKill = Math.ceil(enemy.hp / playerDamage);
@@ -24,7 +24,7 @@ export function previewBattle(player, enemyId) {
 }
 
 export function runBattle(player, enemyId) {
-  const enemyBase = ENEMY_DEFS[enemyId];
+  const enemyBase = getEnemyDef(enemyId, player.difficulty);
   const enemy = { ...enemyBase };
   const logs = [`遭遇 ${enemy.name}。`];
   let round = 1;

@@ -498,6 +498,46 @@ h3 {
   gap: 12px;
 }
 
+.difficulty-panel {
+  display: grid;
+  gap: 9px;
+}
+
+.segmented-control {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.difficulty-button {
+  min-height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  background: rgba(11, 12, 10, 0.62);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.difficulty-button:hover {
+  color: var(--text);
+  border-color: var(--gold);
+}
+
+.difficulty-button[aria-pressed="true"] {
+  color: #061513;
+  background: linear-gradient(180deg, #f5d772, #e8bd4c);
+  border-color: var(--gold);
+}
+
+.difficulty-hint {
+  min-height: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.38;
+}
+
 .hero-portrait {
   width: 64px;
   height: 64px;

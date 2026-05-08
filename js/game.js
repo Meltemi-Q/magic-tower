@@ -1,5 +1,6 @@
 import {
   ASSETS,
+  DEFAULT_DIFFICULTY,
   DOOR_TO_KEY,
   ENEMY_DEFS,
   ITEM_DEFS,
@@ -9,8 +10,10 @@ import {
   createInitialFloors,
   createInitialPlayer,
   getEntity,
+  getDifficulty,
   getTile,
   isInsideMap,
+  normalizeDifficulty,
   removeEntity,
   setTile
 } from "./map.js";
@@ -33,6 +36,7 @@ const SAVE_PREFIX = "magicTowerSaveSlot";
 const SAVE_SLOT_COUNT = 3;
 const QUICK_SLOT = 1;
 const TUTORIAL_KEY = "magicTowerTutorialDone.v3";
+const DIFFICULTY_KEY = "magicTowerDifficulty";
 const DIRECTIONS = Object.freeze({
   up: { x: 0, y: -1 },
   down: { x: 0, y: 1 },
@@ -53,6 +57,8 @@ const els = {
   keyYellow: document.querySelector("#keyYellow"),
   keyBlue: document.querySelector("#keyBlue"),
   keyRed: document.querySelector("#keyRed"),
+  difficultyGroup: document.querySelector("#difficultyGroup"),
+  difficultyHint: document.querySelector("#difficultyHint"),
   targetInfo: document.querySelector("#targetInfo"),
   battleLog: document.querySelector("#battleLog"),
   saveSlots: document.querySelector("#saveSlots"),
@@ -100,6 +106,7 @@ const tutorialSteps = [
 const state = {
   player: null,
   floors: [],
+  difficulty: DEFAULT_DIFFICULTY,
   shop: createShopState(),
   logs: [],
   animation: createAnimationState(),
@@ -116,6 +123,7 @@ const state = {
 init();
 
 function init() {
+  state.difficulty = normalizeDifficulty(localStorage.getItem(DIFFICULTY_KEY));
   bindEvents();
   startNewGame(false);
   addLog("欢迎来到魔塔。击败每层守卫后继续向上。", "good");
@@ -123,20 +131,24 @@ function init() {
   maybeStartTutorial();
 }
 
-function startNewGame(confirmFirst = true) {
-  if (confirmFirst && !window.confirm("确定开始新游戏？当前未保存进度会丢失。")) {
+function startNewGame(confirmFirst = true, difficultyId = state.difficulty) {
+  const difficulty = normalizeDifficulty(difficultyId);
+  const difficultyMeta = getDifficulty(difficulty);
+  if (confirmFirst && !window.confirm(`确定以${difficultyMeta.label}难度开始新游戏？当前未保存进度会丢失。`)) {
     return;
   }
 
-  state.player = createInitialPlayer();
-  state.floors = createInitialFloors();
+  state.difficulty = difficulty;
+  localStorage.setItem(DIFFICULTY_KEY, difficulty);
+  state.player = createInitialPlayer(difficulty);
+  state.floors = createInitialFloors(difficulty);
   state.shop = createShopState();
   state.logs = [];
   clearVisualTimers();
   state.animation = createAnimationState();
   state.gameOver = false;
   state.won = false;
-  addLog("新游戏开始。", "good");
+  addLog(`${difficultyMeta.label}难度开始。`, "good");
   renderAll();
 }
 
@@ -180,6 +192,15 @@ function bindEvents() {
     });
   });
 
+  els.difficultyGroup?.addEventListener("click", (event) => {
+    const button = event.target instanceof Element ? event.target.closest("[data-difficulty]") : null;
+    if (!button) {
+      return;
+    }
+
+    chooseDifficulty(button.dataset.difficulty);
+  });
+
   els.mapGrid.addEventListener("click", (event) => {
     const tile = event.target.closest(".tile");
     if (!tile || !state.player) {
@@ -213,6 +234,23 @@ function bindEvents() {
   els.helpBtn.addEventListener("click", () => els.helpDialog.showModal());
   els.tutorialNextBtn.addEventListener("click", () => advanceTutorial());
   els.tutorialSkipBtn.addEventListener("click", () => finishTutorial());
+}
+
+function chooseDifficulty(difficultyId) {
+  const next = normalizeDifficulty(difficultyId);
+  if (next === state.difficulty) {
+    renderDifficulty();
+    return;
+  }
+
+  const difficulty = getDifficulty(next);
+  if (state.player && !window.confirm(`切换到${difficulty.label}难度会重新开始本局，确定吗？`)) {
+    renderDifficulty();
+    return;
+  }
+
+  startNewGame(false, next);
+  addLog(`已切换为${difficulty.label}难度。${difficulty.description}`, "good");
 }
 
 function maybeStartTutorial() {
@@ -494,6 +532,7 @@ function renderAll() {
 
   renderMap();
   renderStats();
+  renderDifficulty();
   renderTargetInfo();
   renderSaveSlots();
   renderLog();
@@ -644,6 +683,21 @@ function renderStats() {
   els.keyYellow.textContent = player.keys.yellow;
   els.keyBlue.textContent = player.keys.blue;
   els.keyRed.textContent = player.keys.red;
+}
+
+function renderDifficulty() {
+  const current = normalizeDifficulty(state.player?.difficulty ?? state.difficulty);
+  state.difficulty = current;
+  const difficulty = getDifficulty(current);
+
+  els.difficultyGroup?.querySelectorAll("[data-difficulty]").forEach((button) => {
+    const active = button.dataset.difficulty === current;
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (els.difficultyHint) {
+    els.difficultyHint.textContent = difficulty.description;
+  }
 }
 
 function renderTargetInfo(x = null, y = null) {
@@ -863,9 +917,10 @@ function getSlotLabel(slot) {
 
 function saveGame(slot) {
   const payload = {
-    version: 3,
+    version: 4,
     savedAt: new Date().toISOString(),
     floorName: getCurrentFloor().name,
+    difficulty: state.difficulty,
     player: state.player,
     floors: state.floors,
     shop: state.shop,
@@ -892,7 +947,8 @@ function loadGame(slot) {
       throw new Error("Invalid save data");
     }
 
-    state.player = data.player;
+    state.difficulty = normalizeDifficulty(data.difficulty ?? data.player.difficulty);
+    state.player = { ...data.player, difficulty: state.difficulty };
     state.floors = data.floors;
     state.shop = { ...createShopState(), ...data.shop };
     state.logs = data.logs ?? [];
@@ -900,6 +956,7 @@ function loadGame(slot) {
     state.animation = createAnimationState();
     state.gameOver = Boolean(data.gameOver);
     state.won = Boolean(data.won);
+    localStorage.setItem(DIFFICULTY_KEY, state.difficulty);
     addLog(`已读取槽 ${slot}。`, "good");
     renderAll();
   } catch {
@@ -909,7 +966,7 @@ function loadGame(slot) {
 
 function isValidSave(data) {
   return data
-    && [2, 3].includes(data.version)
+    && [2, 3, 4].includes(data.version)
     && data.player
     && Array.isArray(data.floors)
     && data.floors.length === 5

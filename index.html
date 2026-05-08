@@ -62,6 +62,16 @@
         </div>
       </section>
 
+      <section class="panel-section difficulty-panel" aria-label="难度选择">
+        <h2>难度</h2>
+        <div id="difficultyGroup" class="segmented-control" role="group" aria-label="选择难度">
+          <button class="difficulty-button" type="button" data-difficulty="easy" aria-pressed="false">简单</button>
+          <button class="difficulty-button" type="button" data-difficulty="normal" aria-pressed="true">普通</button>
+          <button class="difficulty-button" type="button" data-difficulty="hard" aria-pressed="false">困难</button>
+        </div>
+        <p id="difficultyHint" class="difficulty-hint">标准魔塔节奏。</p>
+      </section>
+
       <section class="panel-section stats-grid" aria-label="基础属性">
         <div><span>HP</span><strong id="statHp">0</strong></div>
         <div><span>ATK</span><strong id="statAtk">0</strong></div>

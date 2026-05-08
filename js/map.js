@@ -74,6 +74,29 @@ export const KEY_NAMES = Object.freeze({
   red: "红钥匙"
 });
 
+export const DEFAULT_DIFFICULTY = "normal";
+
+export const DIFFICULTIES = Object.freeze({
+  easy: {
+    id: "easy",
+    label: "简单",
+    description: "怪物更弱，额外补给更多。",
+    enemy: { hp: 0.86, atk: 0.86, def: 0.9, reward: 1.05 }
+  },
+  normal: {
+    id: "normal",
+    label: "普通",
+    description: "标准魔塔节奏。",
+    enemy: { hp: 1, atk: 1, def: 1, reward: 1 }
+  },
+  hard: {
+    id: "hard",
+    label: "困难",
+    description: "怪物更强，补给更紧。",
+    enemy: { hp: 1.18, atk: 1.16, def: 1.12, reward: 1 }
+  }
+});
+
 export const ITEM_DEFS = Object.freeze({
   redPotion: {
     name: "红药水",
@@ -249,6 +272,32 @@ export const ENEMY_DEFS = Object.freeze({
   }
 });
 
+const itemDifficultyChanges = Object.freeze({
+  easy: {
+    add: [
+      { floorId: 0, key: "6,7", id: "redPotion" },
+      { floorId: 1, key: "6,7", id: "yellowKey" },
+      { floorId: 2, key: "6,7", id: "bluePotion" },
+      { floorId: 3, key: "6,7", id: "emerald" }
+    ],
+    remove: []
+  },
+  normal: {
+    add: [],
+    remove: []
+  },
+  hard: {
+    add: [],
+    remove: [
+      { floorId: 0, key: "1,4" },
+      { floorId: 1, key: "1,7" },
+      { floorId: 2, key: "1,7" },
+      { floorId: 3, key: "1,7" },
+      { floorId: 4, key: "1,7" }
+    ]
+  }
+});
+
 // 每层 8x8，实体用 "x,y" 保存，方便拾取和战斗后删除。
 const floorTemplates = [
   {
@@ -403,20 +452,23 @@ const floorTemplates = [
   }
 ];
 
-export function createInitialFloors() {
-  return floorTemplates.map((floor) => ({
+export function createInitialFloors(difficultyId = DEFAULT_DIFFICULTY) {
+  const difficulty = normalizeDifficulty(difficultyId);
+  return floorTemplates.map((floor) => applyDifficultyItems({
     ...floor,
     layout: floor.layout.map((row) => row.split("")),
     entities: cloneData(floor.entities),
     bossDefeated: false
-  }));
+  }, difficulty));
 }
 
-export function createInitialPlayer() {
+export function createInitialPlayer(difficultyId = DEFAULT_DIFFICULTY) {
+  const difficulty = normalizeDifficulty(difficultyId);
   return {
     x: floorTemplates[0].start.x,
     y: floorTemplates[0].start.y,
     floor: 0,
+    difficulty,
     hp: 520,
     atk: 42,
     def: 18,
@@ -428,6 +480,31 @@ export function createInitialPlayer() {
       blue: 0,
       red: 0
     }
+  };
+}
+
+export function normalizeDifficulty(difficultyId) {
+  return DIFFICULTIES[difficultyId]?.id ?? DEFAULT_DIFFICULTY;
+}
+
+export function getDifficulty(difficultyId = DEFAULT_DIFFICULTY) {
+  return DIFFICULTIES[normalizeDifficulty(difficultyId)];
+}
+
+export function getEnemyDef(enemyId, difficultyId = DEFAULT_DIFFICULTY) {
+  const enemy = ENEMY_DEFS[enemyId];
+  if (!enemy) {
+    throw new Error(`Unknown enemy: ${enemyId}`);
+  }
+
+  const difficulty = getDifficulty(difficultyId);
+  return {
+    ...enemy,
+    hp: scaleStat(enemy.hp, difficulty.enemy.hp),
+    atk: scaleStat(enemy.atk, difficulty.enemy.atk),
+    def: scaleStat(enemy.def, difficulty.enemy.def),
+    gold: scaleStat(enemy.gold, difficulty.enemy.reward),
+    exp: scaleStat(enemy.exp, difficulty.enemy.reward)
   };
 }
 
@@ -457,4 +534,33 @@ export function removeEntity(floor, x, y) {
 
 function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function applyDifficultyItems(floor, difficultyId) {
+  const changes = itemDifficultyChanges[difficultyId] ?? itemDifficultyChanges[DEFAULT_DIFFICULTY];
+
+  changes.remove.forEach(({ floorId, key }) => {
+    if (floor.id === floorId && floor.entities[key]?.type === "item") {
+      delete floor.entities[key];
+    }
+  });
+
+  changes.add.forEach(({ floorId, key, id }) => {
+    if (floor.id !== floorId || floor.entities[key]) {
+      return;
+    }
+
+    const [x, y] = key.split(",").map(Number);
+    if (getTile(floor, x, y) !== TILE.FLOOR || !ITEM_DEFS[id]) {
+      return;
+    }
+
+    floor.entities[key] = { type: "item", id };
+  });
+
+  return floor;
+}
+
+function scaleStat(value, multiplier) {
+  return Math.max(1, Math.round(value * multiplier));
 }
