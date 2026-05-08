@@ -1,10 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="384" height="288" viewBox="0 0 384 288" role="img" aria-label="蝙蝠动作精灵表"><title>蝙蝠动作精灵表</title><defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.32"/></filter></defs><g transform="translate(0 0)">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="384" viewBox="0 0 512 384" role="img" aria-label="蝙蝠动作精灵表"><title>蝙蝠动作精灵表</title><defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.32"/></filter></defs><g transform="translate(0 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       <path d="M44 45 L18 33 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 33 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 39 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 39 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 41 L38 60 M72 41 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 46 L39 62 M65 46 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -12,13 +14,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(96 0)">
+    </g></g><g transform="translate(128 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 -1)">
       <path d="M44 45 L18 25 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 25 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 31 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 31 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 33 L38 60 M72 33 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 38 L39 62 M65 38 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -26,13 +30,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(192 0)">
+    </g></g><g transform="translate(256 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       <path d="M44 45 L18 33 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 33 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 39 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 39 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 41 L38 60 M72 41 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 46 L39 62 M65 46 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -40,13 +46,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(288 0)">
+    </g></g><g transform="translate(384 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 1)">
       <path d="M44 45 L18 40 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 40 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 46 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 46 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 48 L38 60 M72 48 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 53 L39 62 M65 53 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -54,13 +62,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(0 96)">
+    </g></g><g transform="translate(0 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 2)">
       <path d="M44 45 L18 33 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 33 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 39 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 39 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 41 L38 60 M72 41 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 46 L39 62 M65 46 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -68,13 +78,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(96 96)">
+    </g></g><g transform="translate(128 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 -6)">
       <path d="M44 45 L18 25 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 25 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 31 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 31 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 33 L38 60 M72 33 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 38 L39 62 M65 38 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -82,13 +94,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(192 96)">
+    </g></g><g transform="translate(256 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 1)">
       <path d="M44 45 L18 33 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 33 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 39 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 39 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 41 L38 60 M72 41 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 46 L39 62 M65 46 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -96,13 +110,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(288 96)">
+    </g></g><g transform="translate(384 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 -4)">
       <path d="M44 45 L18 40 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 40 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 46 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 46 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 48 L38 60 M72 48 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 53 L39 62 M65 53 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -110,13 +126,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(0 192)">
+    </g></g><g transform="translate(0 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       <path d="M44 45 L18 37 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 37 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 43 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 43 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 45 L38 60 M72 45 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 50 L39 62 M65 50 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -124,13 +142,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(96 192)">
+    </g></g><g transform="translate(128 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(4 -1)">
       <path d="M44 45 L18 22 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 22 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 28 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 28 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 30 L38 60 M72 30 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 35 L39 62 M65 35 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -138,13 +158,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       
-    </g></g><g transform="translate(192 192)">
+    </g></g><g transform="translate(256 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(8 -2)">
       <path d="M44 45 L18 29 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 29 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 35 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 35 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 37 L38 60 M72 37 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 42 L39 62 M65 42 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>
@@ -152,13 +174,15 @@
       <circle cx="54" cy="50" r="3" fill="#f5d166"/>
       <path d="M43 61 L39 67 M53 61 L57 67" stroke="#d8ddf0" stroke-width="2" stroke-linecap="round"/>
       <path d="M65 39 C76 37 81 42 83 50" fill="none" stroke="#ffd166" stroke-width="3" stroke-linecap="round" opacity=".75"/>
-    </g></g><g transform="translate(288 192)">
+    </g></g><g transform="translate(384 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="80" rx="22" ry="6" fill="#000" opacity=".18"/>
     <g filter="url(#softShadow)" transform="translate(2 0)">
       <path d="M44 45 L18 40 L24 54 L13 63 L38 63Z" fill="#252b4d"/>
       <path d="M52 45 L78 40 L72 54 L83 63 L58 63Z" fill="#252b4d"/>
       <path d="M40 48 L22 46 L31 57 L39 62Z" fill="#6b5fa3" opacity=".82"/>
       <path d="M56 48 L74 46 L65 57 L57 62Z" fill="#6b5fa3" opacity=".82"/>
+      <path d="M24 48 L38 60 M72 48 L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 53 L39 62 M65 53 L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="#4d4a7d"/>
       <path d="M37 38 L31 28 L43 34Z" fill="#4d4a7d"/>
       <path d="M59 38 L65 28 L53 34Z" fill="#4d4a7d"/>

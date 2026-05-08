@@ -15,18 +15,18 @@ export const TILE = Object.freeze({
 export const ASSETS = Object.freeze({
   hero: "assets/hero.png",
   sprites: {
-    hero: "assets/sprites/hero.svg",
+    hero: "assets/sprites/hero.png",
     enemies: {
-      greenSlime: "assets/sprites/green_slime.svg",
-      redSlime: "assets/sprites/red_slime.svg",
-      bat: "assets/sprites/bat.svg",
-      skeleton: "assets/sprites/skeleton.svg",
-      mage: "assets/sprites/mage.svg",
-      boss1: "assets/sprites/boss.svg",
-      boss2: "assets/sprites/boss.svg",
-      boss3: "assets/sprites/boss.svg",
-      boss4: "assets/sprites/boss.svg",
-      finalBoss: "assets/sprites/boss.svg"
+      greenSlime: "assets/sprites/green_slime.png",
+      redSlime: "assets/sprites/red_slime.png",
+      bat: "assets/sprites/bat.png",
+      skeleton: "assets/sprites/skeleton.png",
+      mage: "assets/sprites/mage.png",
+      boss1: "assets/sprites/boss.png",
+      boss2: "assets/sprites/boss.png",
+      boss3: "assets/sprites/boss.png",
+      boss4: "assets/sprites/boss.png",
+      finalBoss: "assets/sprites/boss.png"
     }
   },
   tiles: {

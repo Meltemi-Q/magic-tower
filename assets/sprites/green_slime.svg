@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="384" height="288" viewBox="0 0 384 288" role="img" aria-label="绿色史莱姆动作精灵表"><title>绿色史莱姆动作精灵表</title><defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.32"/></filter></defs><g transform="translate(0 0)">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="384" viewBox="0 0 512 384" role="img" aria-label="绿色史莱姆动作精灵表"><title>绿色史莱姆动作精灵表</title><defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.32"/></filter></defs><g transform="translate(0 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       
@@ -10,7 +10,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 66 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(96 0)">
+    </g></g><g transform="translate(128 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(2 -1)">
       
@@ -22,7 +22,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 67 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(192 0)">
+    </g></g><g transform="translate(256 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       
@@ -34,7 +34,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 66 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(288 0)">
+    </g></g><g transform="translate(384 0) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(-2 1)">
       
@@ -46,7 +46,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 65 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(0 96)">
+    </g></g><g transform="translate(0 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       
@@ -58,7 +58,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 66 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(96 96)">
+    </g></g><g transform="translate(128 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(2 -4)">
       
@@ -70,7 +70,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 67 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(192 96)">
+    </g></g><g transform="translate(256 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       
@@ -82,7 +82,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 66 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(288 96)">
+    </g></g><g transform="translate(384 128) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(-2 4)">
       
@@ -94,7 +94,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 65 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(0 192)">
+    </g></g><g transform="translate(0 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(0 0)">
       
@@ -106,7 +106,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 66 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(96 192)">
+    </g></g><g transform="translate(128 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(2 -1)">
       <path d="M64 45 L83 41 L66 58Z" fill="#46c56f" opacity=".9"/>
@@ -118,7 +118,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 67 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(192 192)">
+    </g></g><g transform="translate(256 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(0 -2)">
       <path d="M64 45 L83 44 L66 58Z" fill="#46c56f" opacity=".9"/>
@@ -130,7 +130,7 @@
       <circle cx="40" cy="49" r="1.5" fill="#d8ffe0"/>
       <circle cx="59" cy="49" r="1.5" fill="#d8ffe0"/>
       <path d="M41 62 Q48 66 56 62" fill="none" stroke="#17201a" stroke-width="2" stroke-linecap="round" opacity=".65"/>
-    </g></g><g transform="translate(288 192)">
+    </g></g><g transform="translate(384 256) scale(1.3333333333333333)">
     <ellipse cx="48" cy="79" rx="24" ry="7" fill="#000" opacity=".22"/>
     <g filter="url(#softShadow)" transform="translate(-2 0)">
       <path d="M64 45 L83 47 L66 58Z" fill="#46c56f" opacity=".9"/>

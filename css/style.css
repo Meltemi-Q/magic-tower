@@ -390,7 +390,7 @@ h3 {
 }
 
 .portrait-sprite {
-  background-image: url("../assets/sprites/hero.svg");
+  background-image: url("../assets/sprites/hero.png");
   background-repeat: no-repeat;
   background-size: 400% 300%;
   background-position: 0 0;

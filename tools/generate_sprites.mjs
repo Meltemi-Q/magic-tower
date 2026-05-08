@@ -1,6 +1,9 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { chromium } from "playwright";
 
-const FRAME = 96;
+const BASE_FRAME = 96;
+const FRAME = 128;
 const COLS = 4;
 const ROWS = 3;
 const OUT_DIR = new URL("../assets/sprites/", import.meta.url);
@@ -99,11 +102,15 @@ const actors = [
 
 await mkdir(OUT_DIR, { recursive: true });
 
+const writtenActors = [];
 for (const actor of actors) {
   await writeFile(new URL(`${actor.id}.svg`, OUT_DIR), buildSpriteSheet(actor), "utf8");
+  writtenActors.push(actor);
 }
 
-console.log(`Generated ${actors.length} transparent sprite sheets in assets/sprites.`);
+await exportPngSheets(writtenActors);
+
+console.log(`Generated ${actors.length} transparent SVG and PNG sprite sheets in assets/sprites.`);
 
 function buildSpriteSheet(actor) {
   const frames = [];
@@ -113,7 +120,7 @@ function buildSpriteSheet(actor) {
     for (let col = 0; col < COLS; col += 1) {
       const x = col * FRAME;
       const y = row * FRAME;
-      frames.push(`<g transform="translate(${x} ${y})">${drawActor(actor, action, col)}</g>`);
+      frames.push(`<g transform="translate(${x} ${y}) scale(${FRAME / BASE_FRAME})">${drawActor(actor, action, col)}</g>`);
     }
   });
 
@@ -126,6 +133,50 @@ function buildSpriteSheet(actor) {
     frames.join(""),
     "</svg>"
   ].join("");
+}
+
+async function exportPngSheets(actorList) {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({
+    viewport: { width: FRAME * COLS, height: FRAME * ROWS },
+    deviceScaleFactor: 1
+  });
+
+  for (const actor of actorList) {
+    const svgPath = new URL(`${actor.id}.svg`, OUT_DIR);
+    const svgMarkup = await readFile(svgPath, "utf8");
+    await page.setContent(
+      `<!doctype html>
+      <html>
+        <body>
+          ${svgMarkup}
+        </body>
+        <style>
+          html, body {
+            width: ${FRAME * COLS}px;
+            height: ${FRAME * ROWS}px;
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+          }
+
+          svg {
+            display: block;
+            width: ${FRAME * COLS}px;
+            height: ${FRAME * ROWS}px;
+          }
+        </style>
+      </html>`,
+      { waitUntil: "load" }
+    );
+    await page.screenshot({
+      path: fileURLToPath(new URL(`${actor.id}.png`, OUT_DIR)),
+      omitBackground: true,
+      clip: { x: 0, y: 0, width: FRAME * COLS, height: FRAME * ROWS }
+    });
+  }
+
+  await browser.close();
 }
 
 function drawActor(actor, action, frame) {
@@ -167,6 +218,10 @@ function drawHero(c, action, frame) {
       <circle cx="48" cy="27" r="12" fill="${c.skin}"/>
       <path d="M36 27 C39 14 57 12 62 25 C54 19 43 20 36 27Z" fill="${c.hair}"/>
       <path d="M38 25 C45 30 54 29 61 25 L59 36 C51 41 43 39 37 35Z" fill="${c.skin}"/>
+      <circle cx="43" cy="29" r="2" fill="#1d2228"/>
+      <circle cx="53" cy="29" r="2" fill="#1d2228"/>
+      <path d="M45 35 Q49 38 54 35" fill="none" stroke="#8f4f42" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M41 24 L46 23 M51 23 L57 24" stroke="${c.hair}" stroke-width="2" stroke-linecap="round"/>
       <path d="M37 40 C30 46 29 55 34 60" fill="none" stroke="${c.trim}" stroke-width="5" stroke-linecap="round"/>
       <path d="M59 41 C64 ${45 + armLift} ${swordX - 9} ${swordY + 8} ${swordX - 2} ${swordY + 14}" fill="none" stroke="${c.trim}" stroke-width="5" stroke-linecap="round"/>
       <path d="M${swordX} ${swordY} L${swordX + (attack >= 1 ? 19 : 8)} ${swordY - (attack >= 1 ? 8 : 20)}" stroke="${c.blade}" stroke-width="4" stroke-linecap="round"/>
@@ -210,6 +265,8 @@ function drawBat(c, action, frame) {
       <path d="M52 45 L78 ${33 + flap} L72 54 L83 63 L58 63Z" fill="${c.wing}"/>
       <path d="M40 48 L22 ${39 + flap} L31 57 L39 62Z" fill="${c.membrane}" opacity=".82"/>
       <path d="M56 48 L74 ${39 + flap} L65 57 L57 62Z" fill="${c.membrane}" opacity=".82"/>
+      <path d="M24 ${41 + flap} L38 60 M72 ${41 + flap} L58 60" stroke="#d8ddf0" stroke-width="1.4" stroke-linecap="round" opacity=".32"/>
+      <path d="M31 ${46 + flap} L39 62 M65 ${46 + flap} L57 62" stroke="#d8ddf0" stroke-width="1.2" stroke-linecap="round" opacity=".24"/>
       <ellipse cx="48" cy="53" rx="16" ry="19" fill="${c.body}"/>
       <path d="M37 38 L31 28 L43 34Z" fill="${c.body}"/>
       <path d="M59 38 L65 28 L53 34Z" fill="${c.body}"/>
@@ -263,6 +320,9 @@ function drawMage(c, action, frame) {
       <path d="M39 37 C42 31 54 31 57 37 L60 72 L36 72Z" fill="${c.robeLight}" opacity=".72"/>
       <path d="M37 32 C41 22 56 22 60 32 C55 40 43 40 37 32Z" fill="${c.robe}"/>
       <ellipse cx="49" cy="34" rx="8" ry="6" fill="${c.face}"/>
+      <circle cx="46" cy="34" r="1.8" fill="${c.magic}"/>
+      <circle cx="52" cy="34" r="1.8" fill="${c.magic}"/>
+      <path d="M45 38 Q49 40 53 38" fill="none" stroke="#3c2439" stroke-width="1.6" stroke-linecap="round"/>
       <path d="M29 73 C36 ${69 + robeSwing} 60 ${69 - robeSwing} 67 73" fill="none" stroke="${c.trim}" stroke-width="3" stroke-linecap="round"/>
       <path d="M31 45 C23 49 23 59 30 63" fill="none" stroke="${c.robeLight}" stroke-width="6" stroke-linecap="round"/>
       <path d="M63 44 C69 ${45 - robeSwing} 70 54 65 62" fill="none" stroke="${c.robeLight}" stroke-width="6" stroke-linecap="round"/>
@@ -293,6 +353,8 @@ function drawBoss(c, action, frame) {
       <path d="M58 25 L69 11 L53 19Z" fill="${c.horn}"/>
       <circle cx="43" cy="41" r="3.5" fill="${c.eye}"/>
       <circle cx="55" cy="41" r="3.5" fill="${c.eye}"/>
+      <path d="M37 36 L46 39 M60 36 L52 39" stroke="#2d141b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M47 45 L44 50 L51 50Z" fill="#2d141b" opacity=".75"/>
       <path d="M40 51 Q49 58 58 51" fill="none" stroke="#2d141b" stroke-width="3" stroke-linecap="round"/>
       <path d="M31 58 C21 57 19 68 27 72" fill="none" stroke="${c.bodyLight}" stroke-width="7" stroke-linecap="round"/>
       <path d="M65 58 C74 55 80 62 78 70" fill="none" stroke="${c.bodyLight}" stroke-width="7" stroke-linecap="round"/>
