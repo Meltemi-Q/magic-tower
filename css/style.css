@@ -14,7 +14,7 @@
   --green: #7ccf75;
   --red: #dc6258;
   --blue: #5fa9e8;
-  --tile: clamp(72px, 13vw, 122px);
+  --tile: clamp(44px, 7.2vw, 72px);
 }
 
 * {
@@ -85,7 +85,7 @@ button:focus-visible,
 }
 
 .top-bar {
-  width: min(calc(var(--tile) * 4 + 18px), 100%);
+  width: min(calc(var(--tile) * 8 + 54px), 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -190,11 +190,11 @@ h3 {
 }
 
 .map-grid {
-  width: calc(var(--tile) * 4 + 18px);
+  width: calc(var(--tile) * 8 + 54px);
   max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, var(--tile));
-  grid-template-rows: repeat(4, var(--tile));
+  grid-template-columns: repeat(8, var(--tile));
+  grid-template-rows: repeat(8, var(--tile));
   gap: 6px;
   padding: 6px;
   border: 3px solid #0c0d0b;
@@ -655,7 +655,7 @@ h3 {
 
 @media (max-width: 520px) {
   :root {
-    --tile: min(21vw, 76px);
+    --tile: clamp(30px, 10vw, 42px);
   }
 
   .app-shell {

@@ -1,5 +1,5 @@
 // 地图模块保存静态规则、素材路径和五层初始关卡。
-export const MAP_SIZE = 4;
+export const MAP_SIZE = 8;
 
 export const TILE = Object.freeze({
   WALL: "#",
@@ -249,116 +249,156 @@ export const ENEMY_DEFS = Object.freeze({
   }
 });
 
-// 每层只有 4x4，实体用 "x,y" 保存，方便拾取和战斗后删除。
+// 每层 8x8，实体用 "x,y" 保存，方便拾取和战斗后删除。
 const floorTemplates = [
   {
     id: 0,
     name: "第 1 层 石厅",
-    start: { x: 0, y: 3 },
+    start: { x: 0, y: 7 },
     upPosition: null,
-    downPosition: { x: 2, y: 0 },
+    downPosition: { x: 6, y: 0 },
     layout: [
-      "#.s.",
-      ".1.#",
-      ".M..",
-      "...."
+      "##....s#",
+      "#..##..#",
+      "#.1...1#",
+      "#.##M#.#",
+      "#......#",
+      "#.##.#.#",
+      "#......#",
+      "........"
     ],
     entities: {
-      "0,1": { type: "item", id: "bluePotion" },
-      "0,2": { type: "item", id: "redPotion" },
-      "1,3": { type: "item", id: "yellowKey" },
-      "2,3": { type: "enemy", id: "greenSlime" },
-      "2,2": { type: "item", id: "ruby" },
-      "3,3": { type: "item", id: "emerald" },
-      "2,0": { type: "enemy", id: "boss1" }
+      "1,6": { type: "enemy", id: "greenSlime" },
+      "2,6": { type: "item", id: "yellowKey" },
+      "3,7": { type: "item", id: "redPotion" },
+      "4,6": { type: "enemy", id: "greenSlime" },
+      "5,6": { type: "item", id: "ruby" },
+      "1,4": { type: "item", id: "bluePotion" },
+      "2,4": { type: "enemy", id: "redSlime" },
+      "5,4": { type: "item", id: "emerald" },
+      "2,1": { type: "item", id: "yellowKey" },
+      "5,1": { type: "enemy", id: "bat" },
+      "6,0": { type: "enemy", id: "boss1" }
     }
   },
   {
     id: 1,
     name: "第 2 层 回廊",
-    start: { x: 0, y: 3 },
-    upPosition: { x: 0, y: 3 },
-    downPosition: { x: 2, y: 0 },
+    start: { x: 0, y: 7 },
+    upPosition: { x: 0, y: 7 },
+    downPosition: { x: 7, y: 0 },
     layout: [
-      "#.s.",
-      "..2#",
-      ".M..",
-      "S..."
+      "##...#.s",
+      "#..#.#.#",
+      "#..#..2#",
+      "#.2#M#.#",
+      "#......#",
+      "###.#..#",
+      "#......#",
+      "S......#"
     ],
     entities: {
-      "0,2": { type: "item", id: "redPotion" },
-      "1,1": { type: "enemy", id: "bat" },
-      "1,3": { type: "item", id: "blueKey" },
-      "2,3": { type: "enemy", id: "redSlime" },
-      "2,2": { type: "item", id: "ruby" },
-      "3,2": { type: "item", id: "emerald" },
-      "2,0": { type: "enemy", id: "boss2" }
+      "1,7": { type: "item", id: "redPotion" },
+      "2,6": { type: "item", id: "blueKey" },
+      "3,6": { type: "enemy", id: "redSlime" },
+      "5,7": { type: "enemy", id: "bat" },
+      "6,6": { type: "item", id: "ruby" },
+      "1,4": { type: "item", id: "bluePotion" },
+      "3,4": { type: "enemy", id: "bat" },
+      "5,4": { type: "item", id: "emerald" },
+      "1,2": { type: "enemy", id: "skeleton" },
+      "4,0": { type: "item", id: "yellowKey" },
+      "7,0": { type: "enemy", id: "boss2" }
     }
   },
   {
     id: 2,
     name: "第 3 层 图书厅",
-    start: { x: 0, y: 3 },
-    upPosition: { x: 0, y: 3 },
-    downPosition: { x: 3, y: 0 },
+    start: { x: 0, y: 7 },
+    upPosition: { x: 0, y: 7 },
+    downPosition: { x: 6, y: 0 },
     layout: [
-      "#..s",
-      "..3#",
-      ".M..",
-      "S..."
+      "##..#.s#",
+      "#..#...#",
+      "#..3##.#",
+      "#.##M..#",
+      "#......#",
+      "#.###..#",
+      "#......#",
+      "S......#"
     ],
     entities: {
-      "0,2": { type: "item", id: "bluePotion" },
-      "1,1": { type: "enemy", id: "mage" },
-      "1,3": { type: "item", id: "redKey" },
-      "2,3": { type: "enemy", id: "skeleton" },
-      "2,2": { type: "item", id: "ruby" },
-      "3,2": { type: "item", id: "emerald" },
-      "3,0": { type: "enemy", id: "boss3" }
+      "1,7": { type: "item", id: "redPotion" },
+      "2,6": { type: "enemy", id: "skeleton" },
+      "3,6": { type: "item", id: "redKey" },
+      "5,7": { type: "enemy", id: "mage" },
+      "6,6": { type: "item", id: "ruby" },
+      "1,4": { type: "item", id: "bluePotion" },
+      "3,4": { type: "enemy", id: "bat" },
+      "5,4": { type: "item", id: "emerald" },
+      "1,2": { type: "enemy", id: "mage" },
+      "5,1": { type: "item", id: "blueKey" },
+      "6,0": { type: "enemy", id: "boss3" }
     }
   },
   {
     id: 3,
     name: "第 4 层 暗炉",
-    start: { x: 0, y: 3 },
-    upPosition: { x: 0, y: 3 },
-    downPosition: { x: 2, y: 0 },
+    start: { x: 0, y: 7 },
+    upPosition: { x: 0, y: 7 },
+    downPosition: { x: 7, y: 0 },
     layout: [
-      "#.s.",
-      "..1#",
-      ".M..",
-      "S..."
+      "##...#.s",
+      "#..#...#",
+      "#.1#2#.#",
+      "#..#M..#",
+      "#......#",
+      "#.###..#",
+      "#......#",
+      "S......#"
     ],
     entities: {
-      "0,2": { type: "item", id: "redPotion" },
-      "1,1": { type: "enemy", id: "skeleton" },
-      "1,3": { type: "item", id: "yellowKey" },
-      "2,3": { type: "enemy", id: "mage" },
-      "2,2": { type: "item", id: "ruby" },
-      "3,2": { type: "item", id: "emerald" },
-      "2,0": { type: "enemy", id: "boss4" }
+      "1,7": { type: "item", id: "bluePotion" },
+      "2,6": { type: "enemy", id: "mage" },
+      "3,6": { type: "item", id: "yellowKey" },
+      "5,7": { type: "enemy", id: "skeleton" },
+      "6,6": { type: "item", id: "ruby" },
+      "1,4": { type: "item", id: "redPotion" },
+      "3,4": { type: "enemy", id: "skeleton" },
+      "5,4": { type: "item", id: "emerald" },
+      "1,1": { type: "item", id: "blueKey" },
+      "6,1": { type: "enemy", id: "mage" },
+      "7,0": { type: "enemy", id: "boss4" }
     }
   },
   {
     id: 4,
     name: "第 5 层 王座",
-    start: { x: 0, y: 3 },
-    upPosition: { x: 0, y: 3 },
+    start: { x: 0, y: 7 },
+    upPosition: { x: 0, y: 7 },
     downPosition: null,
     layout: [
-      "#..#",
-      "..3#",
-      ".M..",
-      "S..."
+      "##..#..#",
+      "#..#...#",
+      "#.3#2#.#",
+      "#..#M..#",
+      "#......#",
+      "#.###..#",
+      "#......#",
+      "S......#"
     ],
     entities: {
-      "0,2": { type: "item", id: "redPotion" },
-      "1,1": { type: "enemy", id: "skeleton" },
-      "1,3": { type: "item", id: "redKey" },
-      "2,3": { type: "enemy", id: "mage" },
-      "2,2": { type: "item", id: "ruby" },
-      "3,2": { type: "item", id: "emerald" },
-      "2,0": { type: "enemy", id: "finalBoss" }
+      "1,7": { type: "item", id: "bluePotion" },
+      "2,6": { type: "enemy", id: "skeleton" },
+      "3,6": { type: "item", id: "redKey" },
+      "5,7": { type: "enemy", id: "mage" },
+      "6,6": { type: "item", id: "ruby" },
+      "1,4": { type: "item", id: "redPotion" },
+      "3,4": { type: "enemy", id: "mage" },
+      "5,4": { type: "item", id: "emerald" },
+      "1,1": { type: "item", id: "yellowKey" },
+      "6,1": { type: "enemy", id: "skeleton" },
+      "6,0": { type: "enemy", id: "finalBoss" }
     }
   }
 ];
