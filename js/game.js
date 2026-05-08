@@ -58,6 +58,7 @@ const els = {
   shopDialog: document.querySelector("#shopDialog"),
   shopItems: document.querySelector("#shopItems"),
   shopHint: document.querySelector("#shopHint"),
+  shopPrompt: document.querySelector("#shopPrompt"),
   shopBtn: document.querySelector("#shopBtn"),
   manualSaveBtn: document.querySelector("#manualSaveBtn"),
   quickLoadBtn: document.querySelector("#quickLoadBtn"),
@@ -240,9 +241,8 @@ function movePlayer(direction) {
     state.player.y = targetY;
     queueHeroAction(ACTIONS.WALK, direction);
     playSound("move");
-    addLog("进入商店。", "good");
+    addLog("到达商店。按 E 或点击商店按钮进入训练。", "good");
     renderAll();
-    openShop();
     return;
   }
 
@@ -403,6 +403,7 @@ function renderAll() {
   renderTargetInfo();
   renderSaveSlots();
   renderLog();
+  renderShopAccess();
   renderShop();
 }
 
@@ -597,7 +598,7 @@ function renderTargetInfo(x = null, y = null) {
   }
 
   if (tile === TILE.SHOP) {
-    els.targetInfo.innerHTML = '<div class="target-row"><span>商店</span><strong>金币训练</strong></div>';
+    els.targetInfo.innerHTML = '<div class="target-row"><span>商店</span><strong>站上后按 E 交易</strong></div>';
     return;
   }
 
@@ -643,11 +644,37 @@ function addLog(message, type = "") {
 }
 
 function openShop() {
+  if (!canUseShop()) {
+    addLog("需要站在商店格子上才能交易。", "warn");
+    playSound("blocked");
+    renderShopAccess();
+    return;
+  }
+
   renderShop();
   if (!els.shopDialog.open) {
     playSound("shop");
     els.shopDialog.showModal();
   }
+}
+
+function renderShopAccess() {
+  if (!state.player) {
+    return;
+  }
+
+  const available = canUseShop();
+  els.shopBtn.disabled = !available;
+  els.shopBtn.classList.toggle("active", available);
+  els.shopPrompt.hidden = !available;
+}
+
+function canUseShop() {
+  if (!state.player || state.gameOver || state.won) {
+    return false;
+  }
+
+  return getTile(getCurrentFloor(), state.player.x, state.player.y) === TILE.SHOP;
 }
 
 function renderShop() {

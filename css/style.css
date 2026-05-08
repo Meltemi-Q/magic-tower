@@ -201,6 +201,12 @@ h3 {
   border-color: var(--accent);
 }
 
+.text-button.active {
+  color: #061513;
+  background: linear-gradient(180deg, #f5d772, #e8bd4c);
+  border-color: var(--gold);
+}
+
 .map-grid {
   width: calc(var(--tile) * 8 + 54px);
   max-width: 100%;
@@ -448,6 +454,25 @@ h3 {
 
 .move-button[data-move="right"] {
   grid-column: 3;
+}
+
+.shop-prompt {
+  width: min(calc(var(--tile) * 8 + 54px), 100%);
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border: 1px solid rgba(232, 189, 76, 0.62);
+  border-radius: 6px;
+  background: rgba(232, 189, 76, 0.12);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.shop-prompt[hidden] {
+  display: none;
 }
 
 .side-panel {
