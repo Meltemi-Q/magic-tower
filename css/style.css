@@ -662,9 +662,15 @@ h3 {
 
 .mobile-controls {
   width: min(308px, 100%);
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+  pointer-events: auto;
+}
+
+.tutorial-active .mobile-controls {
+  z-index: 45;
 }
 
 .move-button {
@@ -1438,6 +1444,16 @@ h3 {
 
   .slot-label {
     grid-column: 1 / -1;
+  }
+
+  .tutorial-overlay {
+    place-items: start center;
+    padding: 12px;
+  }
+
+  .tutorial-panel {
+    max-height: min(34vh, 124px);
+    overflow: auto;
   }
 
   .outcome-stats {

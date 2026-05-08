@@ -287,10 +287,33 @@ function bindEvents() {
   });
 
   document.querySelectorAll("[data-move]").forEach((button) => {
-    button.addEventListener("touchstart", (event) => {
+    let lastDirectMoveAt = 0;
+    const triggerMove = (event) => {
       event.preventDefault();
+      event.stopPropagation();
+      lastDirectMoveAt = Date.now();
+      primeAudio();
+      movePlayer(button.dataset.move);
+    };
+
+    button.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+      }
+      triggerMove(event);
     }, { passive: false });
-    button.addEventListener("click", () => {
+    button.addEventListener("touchstart", (event) => {
+      if (window.PointerEvent) {
+        return;
+      }
+      triggerMove(event);
+    }, { passive: false });
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (Date.now() - lastDirectMoveAt < 500) {
+        return;
+      }
       primeAudio();
       movePlayer(button.dataset.move);
     });
@@ -517,6 +540,7 @@ function showTutorialStep() {
   const tutorialSteps = getTutorialSteps();
   const step = tutorialSteps[state.tutorial.step];
   clearTutorialFocus();
+  document.body.classList.add("tutorial-active");
   els.tutorialOverlay.hidden = false;
   els.tutorialText.textContent = step.text;
   els.tutorialNextBtn.textContent = state.tutorial.step === tutorialSteps.length - 1
@@ -548,6 +572,7 @@ function finishTutorial() {
   state.tutorial.active = false;
   localStorage.setItem(TUTORIAL_KEY, "done");
   clearTutorialFocus();
+  document.body.classList.remove("tutorial-active");
   els.tutorialOverlay.hidden = true;
   addLog(t("logs.guideDone"), "good");
 }

@@ -5,7 +5,7 @@
 - **路径**: 当前目录
 - **线上地址**: https://magic-tower.pages.dev
 - **GitHub**: https://github.com/Meltemi-Q/magic-tower
-- **当前版本**: v6.3
+- **当前版本**: v6.4
 
 ## 技术栈
 - 纯静态站点，无构建工具

@@ -3,14 +3,14 @@
 ## 项目信息
 - **项目路径**: `d:\Programs\myprojects\test_things\magic-tower\`
 - **Cloudflare Pages 生产地址**: https://magic-tower.pages.dev
-- **Cloudflare Pages 预览地址**: https://7a46812c.magic-tower.pages.dev
-- **自定义域名**: https://magic-tower.iherai.online（可访问，但当前响应哈希与本次 Pages 部署不一致，需检查绑定/缓存）
+- **Cloudflare Pages 预览地址**: https://622d68ad.magic-tower.pages.dev
+- **自定义域名**: https://magic-tower.iherai.online（已验证 v6.4 在线）
 - **技术栈**: 纯静态 HTML/CSS/JS (ES Module), DOM 渲染, 无 Canvas
 - **Cloudflare 认证方式**: Global API Key + X-Auth-Email（已验证可用于 Wrangler Pages deploy）
 
 ---
 
-## 当前版本: v6.3
+## 当前版本: v6.4
 
 ### 已完成功能
 - ✅ 移动端禁止缩放
@@ -32,6 +32,31 @@
 
 ### 待解决问题
 - 无
+
+---
+
+### 2026-05-08 移动端方向按钮穿透修复 v6.4
+| 项目 | 内容 |
+|------|------|
+| **现象** | 自定义域名 `https://magic-tower.iherai.online` 上首次进入游戏时，教程面板可能覆盖地图下方方向按钮；移动按钮原先只在 `touchstart` 中阻止默认行为，实际移动依赖后续 `click`，部分移动端会因此无法触发移动。 |
+| **修复** | 移动按钮改为 `pointerdown` 直接触发移动，旧浏览器用 `touchstart` 兜底，`click` 仅保留键盘/鼠标兜底，并统一执行 `preventDefault()` 与 `stopPropagation()` 防止重复触发或冒泡干扰。教程显示时给 `body` 添加 `tutorial-active`，完成教程时移除。 |
+| **CSS** | `.mobile-controls` 显式 `pointer-events: auto`，教程激活时提升到遮罩上层；手机窄屏下教程面板放到顶部并限制高度，避免遮住方向键。 |
+| **缓存处理** | `index.html` 中 `css/style.css` 与 `js/game.js` 查询参数统一更新到 `v=6.4`。 |
+| **文档** | `AGENTS.md` 当前版本更新为 v6.4；本日志同步记录本次修复。 |
+| **验证** | `node --check js/game.js`、`node --check js/i18n.js` 通过；Playwright 本地 360px 移动视口验证教程激活时方向按钮命中自身，点击后从 `(0,7)` 移动到相邻可走格并自动完成教程；地图相邻格点击同样可移动。Cloudflare Pages 部署后，自定义域名 `https://magic-tower.iherai.online` 返回 `v=6.4`，线上 Playwright 移动端复验通过。 |
+
+### Cloudflare Pages 重新部署记录 - v6.4
+| 项目 | 内容 |
+|------|------|
+| 时间 | 2026-05-08 22:12 +08:00 |
+| 执行者 | Codex |
+| 命令 | `npx wrangler pages deploy '.' --project-name=magic-tower --branch=main` |
+| 认证方式 | `CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL` |
+| 结果 | ✅ 部署成功，上传 6 个文件，170 个文件已存在 |
+| 预览地址 | https://622d68ad.magic-tower.pages.dev |
+| 生产地址 | https://magic-tower.pages.dev |
+| 自定义域名 | https://magic-tower.iherai.online |
+| 线上验证 | ✅ `https://magic-tower.iherai.online/?check=6.4` 返回 HTML 包含 `v=6.4`；Playwright 线上 360px 移动视口全新 localStorage 下，教程激活时方向按钮 `pointer-events=auto`、`z-index=45`，点击方向按钮后移动成功并写入 `magicTowerTutorialDone.v4=done`。 |
 
 ---
 
