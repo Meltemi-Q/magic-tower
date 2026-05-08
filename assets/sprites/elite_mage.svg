@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="192" viewBox="0 0 256 192">
+  <defs>
+    <g id="mage">
+      <rect width="64" height="64" fill="none"/>
+      <path d="M20 56 27 22h10l7 34z" fill="#64191e" stroke="#e85b6a" stroke-width="3"/>
+      <path d="M24 23 32 7l8 16z" fill="#2b1028" stroke="#c15cff" stroke-width="3"/>
+      <circle cx="32" cy="26" r="6" fill="#f4d6b0"/>
+      <path d="M17 36h30" stroke="#c15cff" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="48" cy="32" r="5" fill="#9d7cff"/>
+    </g>
+  </defs>
+  <use href="#mage" x="0" y="0"/><use href="#mage" x="64" y="0" transform="translate(64 -1)"/><use href="#mage" x="128" y="0"/><use href="#mage" x="192" y="0" transform="translate(192 -1)"/>
+  <use href="#mage" x="0" y="64" transform="translate(0 -2)"/><use href="#mage" x="64" y="64" transform="translate(64 -4)"/><use href="#mage" x="128" y="64" transform="translate(128 -2)"/><use href="#mage" x="192" y="64" transform="translate(192 -4)"/>
+  <use href="#mage" x="0" y="128"/><use href="#mage" x="64" y="128"/><use href="#mage" x="128" y="128"/><use href="#mage" x="192" y="128"/>
+</svg>

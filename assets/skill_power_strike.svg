@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Power Strike">
+  <rect width="64" height="64" rx="8" fill="#21100f"/>
+  <path d="M42 6 18 34h14l-8 24 25-32H35z" fill="#f15a4f"/>
+  <path d="M46 8 28 30h12L30 52l20-27H39z" fill="#ffd36a"/>
+  <path d="M14 46c10-2 20-7 30-18" fill="none" stroke="#fff2b8" stroke-width="5" stroke-linecap="round"/>
+</svg>

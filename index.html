@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>魔塔 Magic Tower</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=6.1">
 </head>
 <body>
   <main class="app-shell">
@@ -16,7 +16,8 @@
           <p><span id="floorName">第 1 层</span></p>
         </div>
         <div class="top-actions">
-          <button id="audioBtn" class="icon-button" type="button" aria-label="开启背景音乐">
+          <button id="langToggleBtn" class="language-toggle" type="button" aria-label="Switch to English">EN</button>
+          <button id="audioBtn" class="icon-button" type="button" aria-label="播放音乐">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 10v4h4l5 4V6l-5 4Z"/>
               <path d="M17 9.2a4 4 0 0 1 0 5.6"/>
@@ -37,16 +38,16 @@
 
       <div class="mobile-controls" aria-label="移动控制">
         <button class="move-button" type="button" data-move="up" aria-label="向上">
-          <svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5 5 12h4v7h6v-7h4Z"/></svg>
+          <img class="control-icon" src="assets/ui/arrow_up.svg" alt="" aria-hidden="true">
         </button>
         <button class="move-button" type="button" data-move="left" aria-label="向左">
-          <svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 12 5v4h7v6h-7v4Z"/></svg>
+          <img class="control-icon" src="assets/ui/arrow_left.svg" alt="" aria-hidden="true">
         </button>
         <button class="move-button" type="button" data-move="down" aria-label="向下">
-          <svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19 5 12h4V5h6v7h4Z"/></svg>
+          <img class="control-icon" src="assets/ui/arrow_down.svg" alt="" aria-hidden="true">
         </button>
         <button class="move-button" type="button" data-move="right" aria-label="向右">
-          <svg class="control-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m19 12-7 7v-4H5V9h7V5Z"/></svg>
+          <img class="control-icon" src="assets/ui/arrow_right.svg" alt="" aria-hidden="true">
         </button>
       </div>
 
@@ -57,50 +58,56 @@
       <section class="panel-section hero-card">
         <span class="hero-portrait portrait-sprite" aria-hidden="true"></span>
         <div>
-          <h2>勇者</h2>
+          <h2 id="heroName">勇者</h2>
           <p id="heroLevel">LV 1</p>
         </div>
       </section>
 
       <section class="panel-section difficulty-panel" aria-label="难度选择">
-        <h2>难度</h2>
+        <h2 id="difficultyHeading">难度</h2>
         <div id="difficultyGroup" class="segmented-control" role="group" aria-label="选择难度">
           <button class="difficulty-button" type="button" data-difficulty="easy" aria-pressed="false">简单</button>
           <button class="difficulty-button" type="button" data-difficulty="normal" aria-pressed="true">普通</button>
           <button class="difficulty-button" type="button" data-difficulty="hard" aria-pressed="false">困难</button>
+          <button class="difficulty-button" type="button" data-difficulty="nightmare" aria-pressed="false">噩梦</button>
         </div>
         <p id="difficultyHint" class="difficulty-hint">标准魔塔节奏。</p>
       </section>
 
       <section class="panel-section stats-grid" aria-label="基础属性">
-        <div><span>HP</span><strong id="statHp">0</strong></div>
-        <div><span>ATK</span><strong id="statAtk">0</strong></div>
-        <div><span>DEF</span><strong id="statDef">0</strong></div>
-        <div><span>金币</span><strong id="statGold">0</strong></div>
-        <div><span>经验</span><strong id="statExp">0</strong></div>
-        <div><span>楼层</span><strong id="statFloor">1</strong></div>
+        <div><span id="labelHp">生命</span><strong id="statHp">0</strong></div>
+        <div><span id="labelAtk">攻击</span><strong id="statAtk">0</strong></div>
+        <div><span id="labelDef">防御</span><strong id="statDef">0</strong></div>
+        <div><span id="labelGold">金币</span><strong id="statGold">0</strong></div>
+        <div><span id="labelExp">经验</span><strong id="statExp">0</strong></div>
+        <div><span id="labelFloor">楼层</span><strong id="statFloor">1</strong></div>
       </section>
 
       <section class="panel-section key-grid" aria-label="钥匙">
-        <div><span class="key-swatch yellow"></span>黄钥匙 <strong id="keyYellow">0</strong></div>
-        <div><span class="key-swatch blue"></span>蓝钥匙 <strong id="keyBlue">0</strong></div>
-        <div><span class="key-swatch red"></span>红钥匙 <strong id="keyRed">0</strong></div>
+        <div><span><span class="key-swatch yellow"></span><span id="labelYellowKey">黄钥匙</span></span><strong id="keyYellow">0</strong></div>
+        <div><span><span class="key-swatch blue"></span><span id="labelBlueKey">蓝钥匙</span></span><strong id="keyBlue">0</strong></div>
+        <div><span><span class="key-swatch red"></span><span id="labelRedKey">红钥匙</span></span><strong id="keyRed">0</strong></div>
+      </section>
+
+      <section class="panel-section skill-panel" aria-label="技能">
+        <h2 id="skillHeading">技能</h2>
+        <div id="skillBar" class="skill-bar"></div>
       </section>
 
       <section class="panel-section enemy-preview" aria-label="目标信息">
-        <h2>前方目标</h2>
+        <h2 id="targetHeading">前方目标</h2>
         <div id="targetInfo" class="target-info">移动到怪物、道具、门或楼梯旁查看。</div>
       </section>
 
       <section class="panel-section save-panel" aria-label="存档">
-        <h2>存档槽</h2>
+        <h2 id="saveHeading">存档槽</h2>
         <div id="saveSlots" class="save-slots"></div>
       </section>
     </aside>
 
     <section class="bottom-panel" aria-label="战斗日志和操作">
       <div class="log-header">
-        <h2>日志</h2>
+        <h2 id="logHeading">日志</h2>
         <div class="action-row">
           <button id="newGameBtn" class="text-button" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6"/><path d="M18 3v5h-5"/><path d="M20 12a8 8 0 0 1-13.7 5.6"/><path d="M6 21v-5h5"/></svg>
@@ -135,10 +142,34 @@
     </section>
   </div>
 
+  <div id="victoryOverlay" class="outcome-overlay victory-screen" hidden>
+    <section class="outcome-panel" aria-live="polite" aria-label="通关胜利">
+      <p class="outcome-kicker" id="victoryKicker">Victory</p>
+      <h2 id="victoryTitle">恭喜通关</h2>
+      <div id="victoryStats" class="outcome-stats"></div>
+      <div class="outcome-actions">
+        <button id="victoryRetryBtn" class="text-button active" type="button">再来一局</button>
+        <button id="victoryShareBtn" class="text-button" type="button">分享种子</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="defeatOverlay" class="outcome-overlay defeat-screen" hidden>
+    <section class="outcome-panel" aria-live="polite" aria-label="游戏失败">
+      <p class="outcome-kicker" id="defeatKicker">Defeat</p>
+      <h2 id="defeatTitle">勇者倒下了</h2>
+      <p id="defeatReason" class="defeat-reason">勇者在战斗中倒下。</p>
+      <div class="outcome-actions">
+        <button id="defeatRetryBtn" class="text-button active" type="button">重新挑战</button>
+        <button id="defeatLoadBtn" class="text-button" type="button">读取存档</button>
+      </div>
+    </section>
+  </div>
+
   <dialog id="shopDialog" class="modal">
     <form method="dialog">
       <header class="modal-header">
-        <h2>商店</h2>
+        <h2 id="shopDialogTitle">商店</h2>
         <button class="icon-button" type="submit" aria-label="关闭">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
@@ -151,20 +182,20 @@
   <dialog id="helpDialog" class="modal">
     <form method="dialog">
       <header class="modal-header">
-        <h2>操作</h2>
+        <h2 id="helpDialogTitle">操作</h2>
         <button class="icon-button" type="submit" aria-label="关闭">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
       </header>
-      <div class="help-list">
+      <div id="helpList" class="help-list">
         <p>方向键或 WASD 移动；手机端使用地图下方方向按钮。</p>
         <p>点击相邻格也可以移动；按 E 或 Enter 会交互前方目标。</p>
         <p>靠近商店后，双击商店格、按 E / Enter 或点击商店按钮都能进入训练。</p>
-        <p>击败每层守卫后，踩下楼梯进入下一层。</p>
+        <p>击败每层守卫后，踏下楼梯进入下一层。</p>
       </div>
     </form>
   </dialog>
 
-  <script type="module" src="js/game.js"></script>
+  <script type="module" src="js/game.js?v=6.2"></script>
 </body>
 </html>

@@ -1,14 +1,25 @@
+import { t } from "./i18n.js";
+
 const PREF_KEY = "magicTowerAudioPrefs";
+const BGM_VOLUME = 0.2;
+const SFX_VOLUME = 0.85;
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+const BGM_TRACKS = Object.freeze({
+  menu: { src: "assets/audio/bgm_menu.mp3", loop: true },
+  explore: { src: "assets/audio/bgm_explore.mp3", loop: true },
+  boss: { src: "assets/audio/bgm_boss.mp3", loop: true },
+  shop: { src: "assets/audio/bgm_shop.mp3", loop: true },
+  victory: { src: "assets/audio/bgm_victory.mp3", loop: false },
+  defeat: { src: "assets/audio/bgm_defeat.mp3", loop: false }
+});
 
 let audioContext = null;
 let masterGain = null;
-let bgmTimer = 0;
-let bgmStep = 0;
+let bgmAudio = null;
 let bgmEnabled = false;
+let currentBgmName = "explore";
 let audioButton = null;
-
-const bgmNotes = [196, 247, 294, 247, 220, 262, 330, 262, 196, 247, 294, 370, 330, 294, 247, 220];
 
 export function bindAudioButton(button) {
   audioButton = button;
@@ -16,12 +27,12 @@ export function bindAudioButton(button) {
   bgmEnabled = Boolean(prefs.bgmEnabled);
   updateAudioButton();
 
-  audioButton.addEventListener("click", () => {
+  audioButton?.addEventListener("click", () => {
     ensureAudio();
     bgmEnabled = !bgmEnabled;
     savePrefs();
     if (bgmEnabled) {
-      startBgm();
+      playBgm(currentBgmName);
       playSound("pickup");
     } else {
       stopBgm();
@@ -29,13 +40,46 @@ export function bindAudioButton(button) {
     }
     updateAudioButton();
   });
+  window.addEventListener("magicTowerLanguageChange", updateAudioButton);
 }
 
 export function primeAudio() {
   ensureAudio();
   if (bgmEnabled) {
-    startBgm();
+    playBgm(currentBgmName);
   }
+}
+
+export function playBgm(name = currentBgmName) {
+  const track = BGM_TRACKS[name] ?? BGM_TRACKS.explore;
+  currentBgmName = BGM_TRACKS[name] ? name : "explore";
+
+  if (!bgmEnabled) {
+    return;
+  }
+
+  if (bgmAudio?.dataset.track === currentBgmName && !bgmAudio.paused) {
+    return;
+  }
+
+  stopBgm();
+  bgmAudio = new Audio(track.src);
+  bgmAudio.dataset.track = currentBgmName;
+  bgmAudio.loop = track.loop;
+  bgmAudio.volume = BGM_VOLUME;
+  bgmAudio.play().catch(() => {
+    // Browsers may require a gesture. primeAudio retries on input.
+  });
+}
+
+export function stopBgm() {
+  if (!bgmAudio) {
+    return;
+  }
+
+  bgmAudio.pause();
+  bgmAudio.currentTime = 0;
+  bgmAudio = null;
 }
 
 export function playSound(name) {
@@ -74,6 +118,19 @@ export function playSound(name) {
       tone(523, now, 0.08, "triangle", 0.045);
       tone(659, now + 0.08, 0.08, "triangle", 0.04);
     },
+    skill: () => {
+      [440, 660, 880].forEach((freq, index) => tone(freq, now + index * 0.05, 0.08, "sine", 0.05));
+    },
+    shield: () => {
+      sweep(240, 520, now, 0.18, "triangle", 0.045);
+      tone(392, now + 0.03, 0.16, "sine", 0.035);
+    },
+    victory: () => {
+      [523, 659, 784, 1046].forEach((freq, index) => tone(freq, now + index * 0.08, 0.12, "triangle", 0.055));
+    },
+    defeat: () => {
+      [220, 196, 165, 123].forEach((freq, index) => tone(freq, now + index * 0.12, 0.16, "sawtooth", 0.04));
+    },
     levelUp: () => {
       [392, 494, 587, 784].forEach((freq, index) => tone(freq, now + index * 0.07, 0.1, "sine", 0.055));
     }
@@ -98,7 +155,7 @@ function ensureAudio() {
   if (!audioContext) {
     audioContext = new AudioContextClass();
     masterGain = audioContext.createGain();
-    masterGain.gain.value = 0.22;
+    masterGain.gain.value = SFX_VOLUME;
     masterGain.connect(audioContext.destination);
   }
 
@@ -156,43 +213,14 @@ function noise(start, duration, gainValue, filterFreq) {
   source.start(start);
 }
 
-function startBgm() {
-  if (!ensureAudio() || bgmTimer) {
-    return;
-  }
-
-  const playStep = () => {
-    if (!bgmEnabled || !audioContext) {
-      bgmTimer = 0;
-      return;
-    }
-
-    const now = audioContext.currentTime;
-    const freq = bgmNotes[bgmStep % bgmNotes.length];
-    tone(freq, now, 0.14, "triangle", 0.018);
-    if (bgmStep % 4 === 0) {
-      tone(freq / 2, now, 0.22, "sine", 0.015);
-    }
-    bgmStep += 1;
-    bgmTimer = window.setTimeout(playStep, 190);
-  };
-
-  playStep();
-}
-
-function stopBgm() {
-  window.clearTimeout(bgmTimer);
-  bgmTimer = 0;
-}
-
 function updateAudioButton() {
   if (!audioButton) {
     return;
   }
 
   audioButton.classList.toggle("active", bgmEnabled);
-  audioButton.setAttribute("aria-label", bgmEnabled ? "关闭背景音乐" : "开启背景音乐");
-  audioButton.title = bgmEnabled ? "关闭背景音乐" : "开启背景音乐";
+  audioButton.setAttribute("aria-label", bgmEnabled ? t("actions.audioOn") : t("actions.audioOff"));
+  audioButton.title = bgmEnabled ? t("actions.audioOn") : t("actions.audioOff");
 }
 
 function loadPrefs() {

@@ -1,9 +1,10 @@
-// 商店模块没有 UI 依赖，只负责价格、扣款和属性成长。
+import { t, shopOptionText, skillText } from "./i18n.js";
+import { getDifficulty } from "./map.js";
+import { getAllSkills, isSkillLearned, learnSkill } from "./skills.js";
+
 export const SHOP_OPTIONS = Object.freeze([
   {
     id: "hp",
-    name: "生命训练",
-    description: "HP +100",
     baseCost: 12,
     growth: 8,
     apply(player) {
@@ -12,8 +13,6 @@ export const SHOP_OPTIONS = Object.freeze([
   },
   {
     id: "atk",
-    name: "攻击训练",
-    description: "ATK +5",
     baseCost: 24,
     growth: 12,
     apply(player) {
@@ -22,14 +21,19 @@ export const SHOP_OPTIONS = Object.freeze([
   },
   {
     id: "def",
-    name: "防御训练",
-    description: "DEF +5",
     baseCost: 20,
     growth: 10,
     apply(player) {
       player.def += 5;
     }
-  }
+  },
+  ...getAllSkills().map((skill) => ({
+    id: `skill:${skill.id}`,
+    type: "skill",
+    skillId: skill.id,
+    baseCost: skill.trainCost,
+    growth: 0
+  }))
 ]);
 
 export function createShopState() {
@@ -39,32 +43,58 @@ export function createShopState() {
   }, {});
 }
 
-export function getShopCost(optionId, shopState) {
+export function getShopCost(optionId, shopState, difficultyId = "normal") {
   const option = SHOP_OPTIONS.find((item) => item.id === optionId);
   if (!option) {
     throw new Error(`Unknown shop option: ${optionId}`);
   }
 
-  return option.baseCost + option.growth * (shopState[optionId] ?? 0);
+  const multiplier = getDifficulty(difficultyId).shopCostMultiplier ?? 1;
+  return Math.ceil((option.baseCost + option.growth * (shopState[optionId] ?? 0)) * multiplier);
 }
 
-export function buyShopOption(player, shopState, optionId) {
+export function buyShopOption(player, shopState, optionId, skillState = null) {
   const option = SHOP_OPTIONS.find((item) => item.id === optionId);
   if (!option) {
-    return { ok: false, message: "商店没有这个项目。" };
+    return { ok: false, message: t("logs.shopNoItem") };
   }
 
-  const cost = getShopCost(optionId, shopState);
+  if (option.type === "skill" && !skillState) {
+    return { ok: false, message: t("logs.skillUnavailable") };
+  }
+
+  if (option.type === "skill" && isSkillLearned(skillState, option.skillId)) {
+    return { ok: false, message: t("logs.skillComplete", { skill: skillText(option.skillId).name }) };
+  }
+
+  const cost = getShopCost(optionId, shopState, player.difficulty);
   if (player.gold < cost) {
-    return { ok: false, message: `金币不足，需要 ${cost} 金币。` };
+    return { ok: false, message: t("logs.noGold", { cost }) };
   }
 
   player.gold -= cost;
-  option.apply(player);
+  if (option.type === "skill") {
+    const result = learnSkill(skillState, option.skillId);
+    if (!result.ok) {
+      player.gold += cost;
+      return result;
+    }
+  } else {
+    const previousMaxHp = player.maxHp ?? player.hp;
+    option.apply(player);
+    if (option.id === "hp") {
+      player.maxHp = previousMaxHp + 100;
+    }
+  }
   shopState[optionId] = (shopState[optionId] ?? 0) + 1;
 
+  const optionText = shopOptionText(option);
   return {
     ok: true,
-    message: `购买 ${option.name}，花费 ${cost} 金币，${option.description}。`
+    message: t("logs.bought", {
+      name: optionText.name,
+      cost,
+      description: optionText.description
+    })
   };
 }
