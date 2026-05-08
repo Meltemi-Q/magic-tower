@@ -35,7 +35,7 @@ import {
 const SAVE_PREFIX = "magicTowerSaveSlot";
 const SAVE_SLOT_COUNT = 3;
 const QUICK_SLOT = 1;
-const TUTORIAL_KEY = "magicTowerTutorialDone.v3";
+const TUTORIAL_KEY = "magicTowerTutorialDone.v4";
 const DIFFICULTY_KEY = "magicTowerDifficulty";
 const DIRECTIONS = Object.freeze({
   up: { x: 0, y: -1 },
@@ -95,7 +95,7 @@ const tutorialSteps = [
   },
   {
     selector: ".action-row",
-    text: "底部按钮负责新游戏、保存、读取和商店。站到商店格后按 E 或点击商店按钮交易。"
+    text: "底部按钮负责新游戏、保存、读取和商店。靠近商店后按 E、Enter、双击商店格或点击商店按钮交易。"
   },
   {
     selector: ".top-actions",
@@ -156,6 +156,10 @@ function bindEvents() {
   bindAudioButton(els.audioBtn);
 
   window.addEventListener("keydown", (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey || isModalOpen()) {
+      return;
+    }
+
     const keyMap = {
       ArrowUp: "up",
       w: "up",
@@ -178,10 +182,19 @@ function bindEvents() {
       movePlayer(direction);
     }
 
-    if (event.key.toLowerCase() === "e") {
+    const focusedInteractive = event.target instanceof Element
+      ? event.target.closest("button, a, input, select, textarea, [role='button']")
+      : null;
+    const shouldUseFocusedControl = focusedInteractive
+      && !focusedInteractive.closest("#mapGrid, .mobile-controls");
+    if (event.key === "Enter" && shouldUseFocusedControl) {
+      return;
+    }
+
+    if (event.key.toLowerCase() === "e" || event.key === "Enter") {
       event.preventDefault();
       primeAudio();
-      openShop();
+      interactWithTarget();
     }
   });
 
@@ -224,9 +237,26 @@ function bindEvents() {
     renderTargetInfo(x, y);
   });
 
+  els.mapGrid.addEventListener("dblclick", (event) => {
+    const tile = event.target.closest(".tile");
+    if (!tile || !state.player) {
+      return;
+    }
+
+    const x = Number(tile.dataset.x);
+    const y = Number(tile.dataset.y);
+    if (getTile(getCurrentFloor(), x, y) !== TILE.SHOP) {
+      return;
+    }
+
+    event.preventDefault();
+    primeAudio();
+    openShopFromTile(x, y);
+  });
+
   els.shopBtn.addEventListener("click", () => {
     primeAudio();
-    openShop();
+    openShopFromAction();
   });
   els.manualSaveBtn.addEventListener("click", () => saveGame(QUICK_SLOT));
   els.quickLoadBtn.addEventListener("click", () => loadGame(QUICK_SLOT));
@@ -251,6 +281,82 @@ function chooseDifficulty(difficultyId) {
 
   startNewGame(false, next);
   addLog(`已切换为${difficulty.label}难度。${difficulty.description}`, "good");
+}
+
+function interactWithTarget() {
+  if (isTutorialActive()) {
+    addLog("请先完成新手引导。", "warn");
+    return;
+  }
+
+  if (state.gameOver || state.won) {
+    addLog(state.won ? "魔塔已经通关，可以开始新游戏。" : "勇者已经倒下，请读取存档或重新开始。", "warn");
+    return;
+  }
+
+  const shopTarget = getShopActionTarget();
+  if (shopTarget) {
+    openShopFromTile(shopTarget.x, shopTarget.y);
+    return;
+  }
+
+  const target = getForwardTarget();
+  if (!target) {
+    addLog("附近没有可交互目标。", "warn");
+    playSound("blocked");
+    return;
+  }
+
+  const direction = getDirectionTo(target.x, target.y);
+  if (!direction) {
+    renderTargetInfo(target.x, target.y);
+    return;
+  }
+
+  movePlayer(direction);
+}
+
+function openShopFromAction() {
+  if (state.gameOver || state.won) {
+    addLog(state.won ? "魔塔已经通关，可以开始新游戏。" : "勇者已经倒下，请读取存档或重新开始。", "warn");
+    return;
+  }
+
+  const target = getShopActionTarget();
+  if (!target) {
+    addLog("靠近商店或站在商店格上才能交易。", "warn");
+    playSound("blocked");
+    renderShopAccess();
+    return;
+  }
+
+  openShopFromTile(target.x, target.y);
+}
+
+function openShopFromTile(x, y) {
+  if (getTile(getCurrentFloor(), x, y) !== TILE.SHOP) {
+    return;
+  }
+
+  if (state.player.x === x && state.player.y === y) {
+    openShop();
+    return;
+  }
+
+  const direction = getDirectionTo(x, y);
+  if (!direction) {
+    renderTargetInfo(x, y);
+    addLog("靠近商店后再交互。", "warn");
+    playSound("blocked");
+    return;
+  }
+
+  movePlayer(direction);
+  window.setTimeout(() => {
+    if (canUseShop()) {
+      openShop();
+    }
+  }, getActionDuration(ACTIONS.WALK) + 40);
 }
 
 function maybeStartTutorial() {
@@ -373,7 +479,7 @@ function movePlayer(direction) {
     state.player.y = targetY;
     queueHeroAction(ACTIONS.WALK, direction);
     playSound("move");
-    addLog("到达商店。按 E 或点击商店按钮进入训练。", "good");
+    addLog("到达商店。按 E、Enter、双击商店格或点击商店按钮进入训练。", "good");
     renderAll();
     return;
   }
@@ -746,7 +852,7 @@ function renderTargetInfo(x = null, y = null) {
   }
 
   if (tile === TILE.SHOP) {
-    els.targetInfo.innerHTML = '<div class="target-row"><span>商店</span><strong>站上后按 E 交易</strong></div>';
+    els.targetInfo.innerHTML = '<div class="target-row"><span>商店</span><strong>E / Enter / 双击进入</strong></div>';
     return;
   }
 
@@ -755,7 +861,8 @@ function renderTargetInfo(x = null, y = null) {
 
 function getForwardTarget() {
   const floor = getCurrentFloor();
-  const adjacent = Object.values(DIRECTIONS)
+  const facingDelta = DIRECTIONS[state.animation.heroFacing] ?? DIRECTIONS.down;
+  const adjacent = [facingDelta, ...Object.values(DIRECTIONS).filter((delta) => delta !== facingDelta)]
     .map((delta) => ({ x: state.player.x + delta.x, y: state.player.y + delta.y }))
     .filter((pos) => isInsideMap(pos.x, pos.y));
 
@@ -767,6 +874,28 @@ function getForwardTarget() {
       || tile === TILE.STAIR_UP
       || tile === TILE.SHOP;
   }) ?? null;
+}
+
+function getDirectionTo(x, y) {
+  const dx = x - state.player.x;
+  const dy = y - state.player.y;
+  if (Math.abs(dx) + Math.abs(dy) !== 1) {
+    return null;
+  }
+
+  return Object.entries(DIRECTIONS).find(([, delta]) => delta.x === dx && delta.y === dy)?.[0] ?? null;
+}
+
+function getShopActionTarget() {
+  const floor = getCurrentFloor();
+  if (getTile(floor, state.player.x, state.player.y) === TILE.SHOP) {
+    return { x: state.player.x, y: state.player.y };
+  }
+
+  return Object.values(DIRECTIONS)
+    .map((delta) => ({ x: state.player.x + delta.x, y: state.player.y + delta.y }))
+    .filter((pos) => isInsideMap(pos.x, pos.y))
+    .find((pos) => getTile(floor, pos.x, pos.y) === TILE.SHOP) ?? null;
 }
 
 function renderLog() {
@@ -816,7 +945,7 @@ function renderShopAccess() {
     return;
   }
 
-  const available = canUseShop();
+  const available = Boolean(getShopActionTarget()) && !state.gameOver && !state.won;
   els.shopBtn.disabled = !available;
   els.shopBtn.classList.toggle("active", available);
   els.shopPrompt.hidden = !available;
@@ -828,6 +957,10 @@ function canUseShop() {
   }
 
   return getTile(getCurrentFloor(), state.player.x, state.player.y) === TILE.SHOP;
+}
+
+function isModalOpen() {
+  return Boolean(els.shopDialog?.open || els.helpDialog?.open);
 }
 
 function renderShop() {
