@@ -22,10 +22,11 @@ export const ASSETS = Object.freeze({
       bat: "assets/sprites/bat.png",
       skeleton: "assets/sprites/skeleton.png",
       mage: "assets/sprites/mage.png",
-      boss1: "assets/sprites/boss.png",
-      boss2: "assets/sprites/boss.png",
-      boss3: "assets/sprites/boss.png",
-      boss4: "assets/sprites/boss.png",
+      guard: "assets/sprites/guard.png",
+      boss1: "assets/sprites/guard.png",
+      boss2: "assets/sprites/guard.png",
+      boss3: "assets/sprites/guard.png",
+      boss4: "assets/sprites/guard.png",
       finalBoss: "assets/sprites/boss.png"
     }
   },
@@ -54,10 +55,11 @@ export const ASSETS = Object.freeze({
     bat: "assets/bat.png",
     skeleton: "assets/skeleton.png",
     mage: "assets/mage.png",
-    boss1: "assets/boss.png",
-    boss2: "assets/boss.png",
-    boss3: "assets/boss.png",
-    boss4: "assets/boss.png",
+    guard: "assets/guard.png",
+    boss1: "assets/guard.png",
+    boss2: "assets/guard.png",
+    boss3: "assets/guard.png",
+    boss4: "assets/guard.png",
     finalBoss: "assets/boss.png"
   }
 });
