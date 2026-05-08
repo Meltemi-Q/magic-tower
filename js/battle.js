@@ -57,11 +57,13 @@ export function runBattle(player, enemyId) {
   player.gold += enemy.gold;
   player.exp += enemy.exp;
   logs.push(`击败 ${enemy.name}，获得 ${enemy.gold} 金币和 ${enemy.exp} 经验。`);
-  logs.push(...applyLevelUps(player));
+  const levelLogs = applyLevelUps(player);
+  logs.push(...levelLogs);
 
   return {
     victory: true,
     enemy: enemyBase,
+    leveledUp: levelLogs.length > 0,
     logs
   };
 }

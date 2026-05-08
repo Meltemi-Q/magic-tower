@@ -97,6 +97,12 @@ button:focus-visible,
   gap: 4px;
 }
 
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 h1,
 h2,
 h3,
@@ -187,6 +193,12 @@ h3 {
   display: inline-grid;
   place-items: center;
   color: var(--gold);
+}
+
+.icon-button.active {
+  color: #061513;
+  background: linear-gradient(180deg, #6fe2d2, #35c7b2);
+  border-color: var(--accent);
 }
 
 .map-grid {

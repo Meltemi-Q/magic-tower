@@ -16,6 +16,7 @@ import {
 } from "./map.js";
 import { previewBattle, runBattle } from "./battle.js";
 import { SHOP_OPTIONS, buyShopOption, createShopState, getShopCost } from "./shop.js";
+import { bindAudioButton, playCombatSounds, playSound, primeAudio } from "./audio.js";
 import {
   ACTIONS,
   addCombatEffect,
@@ -61,6 +62,7 @@ const els = {
   manualSaveBtn: document.querySelector("#manualSaveBtn"),
   quickLoadBtn: document.querySelector("#quickLoadBtn"),
   newGameBtn: document.querySelector("#newGameBtn"),
+  audioBtn: document.querySelector("#audioBtn"),
   helpBtn: document.querySelector("#helpBtn"),
   helpDialog: document.querySelector("#helpDialog")
 };
@@ -104,6 +106,8 @@ function startNewGame(confirmFirst = true) {
 }
 
 function bindEvents() {
+  bindAudioButton(els.audioBtn);
+
   window.addEventListener("keydown", (event) => {
     const keyMap = {
       ArrowUp: "up",
@@ -123,12 +127,22 @@ function bindEvents() {
     const direction = keyMap[event.key];
     if (direction) {
       event.preventDefault();
+      primeAudio();
       movePlayer(direction);
+    }
+
+    if (event.key.toLowerCase() === "e") {
+      event.preventDefault();
+      primeAudio();
+      openShop();
     }
   });
 
   document.querySelectorAll("[data-move]").forEach((button) => {
-    button.addEventListener("click", () => movePlayer(button.dataset.move));
+    button.addEventListener("click", () => {
+      primeAudio();
+      movePlayer(button.dataset.move);
+    });
   });
 
   els.mapGrid.addEventListener("click", (event) => {
@@ -145,6 +159,7 @@ function bindEvents() {
     if (Math.abs(dx) + Math.abs(dy) === 1) {
       const direction = Object.entries(DIRECTIONS).find(([, delta]) => delta.x === dx && delta.y === dy)?.[0];
       if (direction) {
+        primeAudio();
         movePlayer(direction);
       }
       return;
@@ -153,7 +168,10 @@ function bindEvents() {
     renderTargetInfo(x, y);
   });
 
-  els.shopBtn.addEventListener("click", () => openShop());
+  els.shopBtn.addEventListener("click", () => {
+    primeAudio();
+    openShop();
+  });
   els.manualSaveBtn.addEventListener("click", () => saveGame(QUICK_SLOT));
   els.quickLoadBtn.addEventListener("click", () => loadGame(QUICK_SLOT));
   els.newGameBtn.addEventListener("click", () => startNewGame(true));
@@ -176,6 +194,7 @@ function movePlayer(direction) {
   const targetY = state.player.y + delta.y;
 
   if (!isInsideMap(targetX, targetY)) {
+    playSound("blocked");
     renderMap();
     return;
   }
@@ -186,6 +205,7 @@ function movePlayer(direction) {
 
   if (tile === TILE.WALL) {
     addLog("前方是墙。", "warn");
+    playSound("blocked");
     renderMap();
     return;
   }
@@ -219,6 +239,7 @@ function movePlayer(direction) {
     state.player.x = targetX;
     state.player.y = targetY;
     queueHeroAction(ACTIONS.WALK, direction);
+    playSound("move");
     addLog("进入商店。", "good");
     renderAll();
     openShop();
@@ -227,6 +248,9 @@ function movePlayer(direction) {
 
   state.player.x = targetX;
   state.player.y = targetY;
+  if (!entity) {
+    playSound("move");
+  }
   queueHeroAction(entity?.type === "enemy" ? ACTIONS.ATTACK : ACTIONS.WALK, direction);
   renderAll();
 }
@@ -235,6 +259,7 @@ function tryOpenDoor(floor, x, y, tile) {
   const keyType = DOOR_TO_KEY[tile];
   if (state.player.keys[keyType] <= 0) {
     addLog(`需要 ${KEY_NAMES[keyType]}。`, "warn");
+    playSound("blocked");
     renderTargetInfo(x, y);
     renderMap();
     return false;
@@ -243,6 +268,7 @@ function tryOpenDoor(floor, x, y, tile) {
   state.player.keys[keyType] -= 1;
   setTile(floor, x, y, TILE.FLOOR);
   addLog(`打开${KEY_NAMES[keyType].replace("钥匙", "门")}。`, "good");
+  playSound("door");
   return true;
 }
 
@@ -252,6 +278,7 @@ function handleEntity(floor, x, y, entity) {
     const message = item.apply(state.player);
     removeEntity(floor, x, y);
     addLog(message, "good");
+    playSound("pickup");
     return true;
   }
 
@@ -259,6 +286,7 @@ function handleEntity(floor, x, y, entity) {
     const preview = previewBattle(state.player, entity.id);
     if (!preview.canWin) {
       addLog(`无法击败 ${preview.enemy.name}，预计损失 ${preview.expectedLoss} HP。`, "bad");
+      playSound("blocked");
       renderTargetInfo(x, y);
       renderMap();
       return false;
@@ -274,6 +302,7 @@ function handleEntity(floor, x, y, entity) {
     }
 
     queueCombatEffect(x, y, entity.id, state.animation.heroFacing, result.enemy);
+    playCombatSounds(result.enemy.isBoss || entity.id === "mage", result.leveledUp);
     removeEntity(floor, x, y);
 
     if (result.enemy.isBoss) {
@@ -322,6 +351,7 @@ function useStairs(direction) {
   state.player.x = spawn.x;
   state.player.y = spawn.y;
   addLog(`来到${nextFloor.name}。`, "good");
+  playSound("stairs");
   renderAll();
 }
 
@@ -615,6 +645,7 @@ function addLog(message, type = "") {
 function openShop() {
   renderShop();
   if (!els.shopDialog.open) {
+    playSound("shop");
     els.shopDialog.showModal();
   }
 }
@@ -644,6 +675,7 @@ function renderShop() {
     button.addEventListener("click", () => {
       const result = buyShopOption(state.player, state.shop, option.id);
       addLog(result.message, result.ok ? "good" : "warn");
+      playSound(result.ok ? "levelUp" : "blocked");
       renderAll();
     });
 
