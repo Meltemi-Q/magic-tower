@@ -18,9 +18,12 @@ import { previewBattle, runBattle } from "./battle.js";
 import { SHOP_OPTIONS, buyShopOption, createShopState, getShopCost } from "./shop.js";
 import {
   ACTIONS,
+  addCombatEffect,
   createActorSprite,
   createAnimationState,
+  getCombatEffectAt,
   getActionDuration,
+  removeCombatEffect,
   resetHeroAction,
   setHeroAction
 } from "./animation.js";
@@ -69,6 +72,7 @@ const state = {
   logs: [],
   animation: createAnimationState(),
   heroActionTimer: 0,
+  effectTimers: new Set(),
   gameOver: false,
   won: false
 };
@@ -91,6 +95,7 @@ function startNewGame(confirmFirst = true) {
   state.floors = createInitialFloors();
   state.shop = createShopState();
   state.logs = [];
+  clearVisualTimers();
   state.animation = createAnimationState();
   state.gameOver = false;
   state.won = false;
@@ -268,6 +273,7 @@ function handleEntity(floor, x, y, entity) {
       return false;
     }
 
+    queueCombatEffect(x, y, entity.id, state.animation.heroFacing, result.enemy);
     removeEntity(floor, x, y);
 
     if (result.enemy.isBoss) {
@@ -332,6 +338,31 @@ function queueHeroAction(action, direction) {
   }, getActionDuration(action));
 }
 
+function queueCombatEffect(x, y, enemyId, direction, enemy) {
+  const effectId = addCombatEffect(state.animation, {
+    x,
+    y,
+    direction,
+    enemySprite: ENEMY_DEFS[enemyId].sprite,
+    kind: enemy.isBoss || enemyId === "mage" ? "magic" : "slash",
+    defeated: true
+  });
+
+  const timer = window.setTimeout(() => {
+    removeCombatEffect(state.animation, effectId);
+    state.effectTimers.delete(timer);
+    renderMap();
+  }, 680);
+  state.effectTimers.add(timer);
+}
+
+function clearVisualTimers() {
+  window.clearTimeout(state.heroActionTimer);
+  state.heroActionTimer = 0;
+  state.effectTimers.forEach((timer) => window.clearTimeout(timer));
+  state.effectTimers.clear();
+}
+
 function renderAll() {
   if (!state.player) {
     return;
@@ -354,6 +385,7 @@ function renderMap() {
     for (let x = 0; x < MAP_SIZE; x += 1) {
       const tile = getTile(floor, x, y);
       const entity = getEntity(floor, x, y);
+      const combatEffect = getCombatEffectAt(state.animation, x, y);
       const button = document.createElement("button");
       button.type = "button";
       button.className = `tile ${tileClass(tile, entity)}`;
@@ -363,6 +395,11 @@ function renderMap() {
       button.setAttribute("aria-label", describeCell(tile, entity, x, y));
 
       appendTileImage(button, ASSETS.tiles[tile] ?? ASSETS.tiles[TILE.FLOOR], "tile-base");
+
+      if (combatEffect) {
+        button.classList.add("combat-hit", `combat-${combatEffect.kind}`);
+        appendEffectEnemy(button, combatEffect);
+      }
 
       if (state.player.x === x && state.player.y === y) {
         button.classList.add("player");
@@ -375,6 +412,10 @@ function renderMap() {
 
       if (Math.abs(state.player.x - x) + Math.abs(state.player.y - y) === 1) {
         button.classList.add("reachable");
+      }
+
+      if (combatEffect) {
+        appendCombatBurst(button, combatEffect);
       }
 
       els.mapGrid.appendChild(button);
@@ -394,6 +435,26 @@ function appendTileImage(parent, src, className) {
 
 function appendActorSprite(parent, src, role, action, facing = "down") {
   parent.appendChild(createActorSprite(src, { action, facing, role }));
+}
+
+function appendEffectEnemy(parent, effect) {
+  if (!effect.enemySprite) {
+    return;
+  }
+
+  const ghost = createActorSprite(effect.enemySprite, { action: ACTIONS.IDLE, role: "enemy" });
+  ghost.classList.add("effect-enemy-ghost");
+  if (effect.defeated) {
+    ghost.classList.add("effect-defeated");
+  }
+  parent.appendChild(ghost);
+}
+
+function appendCombatBurst(parent, effect) {
+  const burst = document.createElement("span");
+  burst.className = `combat-effect effect-${effect.kind} direction-${effect.direction}`;
+  burst.setAttribute("aria-hidden", "true");
+  parent.appendChild(burst);
 }
 
 function tileClass(tile, entity) {
@@ -677,6 +738,7 @@ function loadGame(slot) {
     state.floors = data.floors;
     state.shop = { ...createShopState(), ...data.shop };
     state.logs = data.logs ?? [];
+    clearVisualTimers();
     state.animation = createAnimationState();
     state.gameOver = Boolean(data.gameOver);
     state.won = Boolean(data.won);

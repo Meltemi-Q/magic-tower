@@ -19,7 +19,8 @@ const ACTION_DURATIONS = Object.freeze({
 export function createAnimationState() {
   return {
     heroAction: ACTIONS.IDLE,
-    heroFacing: "down"
+    heroFacing: "down",
+    effects: []
   };
 }
 
@@ -36,6 +37,26 @@ export function resetHeroAction(animation) {
 
 export function getActionDuration(action) {
   return ACTION_DURATIONS[normalizeAction(action)];
+}
+
+export function addCombatEffect(animation, effect) {
+  const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  animation.effects.push({
+    id,
+    type: "combat",
+    kind: "slash",
+    defeated: true,
+    ...effect
+  });
+  return id;
+}
+
+export function removeCombatEffect(animation, id) {
+  animation.effects = animation.effects.filter((effect) => effect.id !== id);
+}
+
+export function getCombatEffectAt(animation, x, y) {
+  return animation.effects.find((effect) => effect.type === "combat" && effect.x === x && effect.y === y) ?? null;
 }
 
 export function createActorSprite(src, { action = ACTIONS.IDLE, facing = "down", role = "enemy" } = {}) {
