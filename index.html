@@ -114,6 +114,17 @@
     </section>
   </main>
 
+  <div id="tutorialOverlay" class="tutorial-overlay" hidden>
+    <section class="tutorial-panel" aria-live="polite" aria-label="新手引导">
+      <div id="tutorialProgress" class="tutorial-progress"></div>
+      <p id="tutorialText"></p>
+      <div class="tutorial-actions">
+        <button id="tutorialSkipBtn" class="text-button" type="button">跳过</button>
+        <button id="tutorialNextBtn" class="text-button active" type="button">下一步</button>
+      </div>
+    </section>
+  </div>
+
   <dialog id="shopDialog" class="modal">
     <form method="dialog">
       <header class="modal-header">

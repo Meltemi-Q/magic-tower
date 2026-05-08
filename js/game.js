@@ -32,6 +32,7 @@ import {
 const SAVE_PREFIX = "magicTowerSaveSlot";
 const SAVE_SLOT_COUNT = 3;
 const QUICK_SLOT = 1;
+const TUTORIAL_KEY = "magicTowerTutorialDone.v3";
 const DIRECTIONS = Object.freeze({
   up: { x: 0, y: -1 },
   down: { x: 0, y: 1 },
@@ -65,8 +66,36 @@ const els = {
   newGameBtn: document.querySelector("#newGameBtn"),
   audioBtn: document.querySelector("#audioBtn"),
   helpBtn: document.querySelector("#helpBtn"),
-  helpDialog: document.querySelector("#helpDialog")
+  helpDialog: document.querySelector("#helpDialog"),
+  tutorialOverlay: document.querySelector("#tutorialOverlay"),
+  tutorialText: document.querySelector("#tutorialText"),
+  tutorialProgress: document.querySelector("#tutorialProgress"),
+  tutorialNextBtn: document.querySelector("#tutorialNextBtn"),
+  tutorialSkipBtn: document.querySelector("#tutorialSkipBtn")
 };
+
+const tutorialSteps = [
+  {
+    selector: "#mapGrid",
+    text: "这里是 8x8 魔塔地图。方向键、WASD、下方方向按钮或点击相邻格都可以移动。"
+  },
+  {
+    selector: ".side-panel",
+    text: "右侧显示 HP、攻击、防御、金币、经验和钥匙。进门和战斗前先看这里。"
+  },
+  {
+    selector: ".enemy-preview",
+    text: "靠近怪物、门、楼梯或商店时，目标面板会显示战斗损失、钥匙需求或交互提示。"
+  },
+  {
+    selector: ".action-row",
+    text: "底部按钮负责新游戏、保存、读取和商店。站到商店格后按 E 或点击商店按钮交易。"
+  },
+  {
+    selector: ".top-actions",
+    text: "顶部按钮可以开关背景音乐，也可以随时打开帮助。完成引导后即可开始探索。"
+  }
+];
 
 const state = {
   player: null,
@@ -76,6 +105,10 @@ const state = {
   animation: createAnimationState(),
   heroActionTimer: 0,
   effectTimers: new Set(),
+  tutorial: {
+    active: false,
+    step: 0
+  },
   gameOver: false,
   won: false
 };
@@ -87,6 +120,7 @@ function init() {
   startNewGame(false);
   addLog("欢迎来到魔塔。击败每层守卫后继续向上。", "good");
   renderAll();
+  maybeStartTutorial();
 }
 
 function startNewGame(confirmFirst = true) {
@@ -177,10 +211,70 @@ function bindEvents() {
   els.quickLoadBtn.addEventListener("click", () => loadGame(QUICK_SLOT));
   els.newGameBtn.addEventListener("click", () => startNewGame(true));
   els.helpBtn.addEventListener("click", () => els.helpDialog.showModal());
+  els.tutorialNextBtn.addEventListener("click", () => advanceTutorial());
+  els.tutorialSkipBtn.addEventListener("click", () => finishTutorial());
+}
+
+function maybeStartTutorial() {
+  if (localStorage.getItem(TUTORIAL_KEY) === "done") {
+    return;
+  }
+
+  state.tutorial.active = true;
+  state.tutorial.step = 0;
+  showTutorialStep();
+}
+
+function showTutorialStep() {
+  const step = tutorialSteps[state.tutorial.step];
+  clearTutorialFocus();
+  els.tutorialOverlay.hidden = false;
+  els.tutorialText.textContent = step.text;
+  els.tutorialNextBtn.textContent = state.tutorial.step === tutorialSteps.length - 1 ? "开始探索" : "下一步";
+  els.tutorialProgress.innerHTML = "";
+
+  tutorialSteps.forEach((_, index) => {
+    const dot = document.createElement("span");
+    dot.className = `tutorial-dot ${index === state.tutorial.step ? "active" : ""}`;
+    els.tutorialProgress.appendChild(dot);
+  });
+
+  document.querySelector(step.selector)?.classList.add("tutorial-focus");
+}
+
+function advanceTutorial() {
+  if (state.tutorial.step >= tutorialSteps.length - 1) {
+    finishTutorial();
+    return;
+  }
+
+  state.tutorial.step += 1;
+  showTutorialStep();
+}
+
+function finishTutorial() {
+  state.tutorial.active = false;
+  localStorage.setItem(TUTORIAL_KEY, "done");
+  clearTutorialFocus();
+  els.tutorialOverlay.hidden = true;
+  addLog("新手引导完成，开始探索魔塔。", "good");
+}
+
+function clearTutorialFocus() {
+  document.querySelectorAll(".tutorial-focus").forEach((node) => node.classList.remove("tutorial-focus"));
+}
+
+function isTutorialActive() {
+  return state.tutorial.active;
 }
 
 function movePlayer(direction) {
   if (!DIRECTIONS[direction]) {
+    return;
+  }
+
+  if (isTutorialActive()) {
+    addLog("请先完成新手引导。", "warn");
     return;
   }
 
@@ -644,6 +738,11 @@ function addLog(message, type = "") {
 }
 
 function openShop() {
+  if (isTutorialActive()) {
+    addLog("请先完成新手引导。", "warn");
+    return;
+  }
+
   if (!canUseShop()) {
     addLog("需要站在商店格子上才能交易。", "warn");
     playSound("blocked");

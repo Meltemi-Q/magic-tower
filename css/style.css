@@ -610,6 +610,68 @@ h3 {
   min-height: 190px;
 }
 
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: end center;
+  padding: 22px;
+  background: rgba(0, 0, 0, 0.54);
+}
+
+.tutorial-overlay[hidden] {
+  display: none;
+}
+
+.tutorial-panel {
+  width: min(520px, 100%);
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(27, 28, 24, 0.98);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
+  z-index: 40;
+}
+
+.tutorial-panel p {
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.tutorial-progress {
+  display: flex;
+  gap: 6px;
+}
+
+.tutorial-dot {
+  width: 18px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(170, 169, 153, 0.36);
+}
+
+.tutorial-dot.active {
+  background: var(--gold);
+}
+
+.tutorial-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.tutorial-focus {
+  position: relative;
+  z-index: 30;
+  pointer-events: none;
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 8px rgba(232, 189, 76, 0.18), 0 0 28px rgba(232, 189, 76, 0.48);
+}
+
 .log-header {
   display: flex;
   justify-content: space-between;
