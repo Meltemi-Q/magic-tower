@@ -875,7 +875,7 @@ h3 {
 
 @media (max-width: 520px) {
   :root {
-    --tile: clamp(30px, 10vw, 42px);
+    --tile: clamp(28px, 9vw, 38px);
   }
 
   .app-shell {
